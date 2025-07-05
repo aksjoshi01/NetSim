@@ -40,6 +40,13 @@ class Link:
         """
         self.dst = dst
 
+    
+    def get_latency(self):
+        """
+        @brief      Returns the latency of the link.
+        """
+        return self.latency
+
 
     def send_pkt(self, pkt: 'Packet'):
         """
@@ -60,6 +67,7 @@ class Link:
                     If the popped pkt is not None, then we know that the packet has reached its 
                     destination. This is possible because the initial fifo size is equal to the latency 
                     of the link.
+        @param      current_cycle - current time according to the simulator
         """
         arriving_pkt = self.fifo.popleft()
         if arriving_pkt:

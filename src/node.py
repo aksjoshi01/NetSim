@@ -26,23 +26,30 @@ class Node:
         self.recvd_pkts: deque[Packet] = deque()
 
 
-    def add_input_port(self, node_id: str, link: 'Link', fifo_capacity: int, parent_node: 'Node'):
+    def add_input_port(self, node_id: str, link: 'Link', fifo_capacity: int):
         """
         @brief      Add new input port to recv pkts from node `node_id`
+        @param      node_id
+                    link - the connected link between the input port and the output port
+                    fifo_capacity - size of the fifo
         """
-        self.input_ports[node_id] = InputPort(parent_node, link, fifo_capacity)
+        self.input_ports[node_id] = InputPort(self, link, fifo_capacity)
 
 
-    def add_output_port(self, node_id: str, link: 'Link', dst_fifo_capacity: int, parent_node: 'Node'):
+    def add_output_port(self, node_id: str, link: 'Link', dst_fifo_capacity: int):
         """
         @brief      Add new output port to send pkts to node `node_id`
+        @param      node_id
+                    link - the connected link between the output port and the input port
+                    dst_fifo_capacity - fifo size of the destination node's
         """
-        self.output_ports[node_id] = OutputPort(parent_node, link, dst_fifo_capacity)
+        self.output_ports[node_id] = OutputPort(self, link, dst_fifo_capacity)
 
 
     def get_output_port(self, node_id: str):
         """
         @brief      Returns the output port instance for the specified node
+        @param      node_id - Returns the output port associated with the node `node_id`
         """
         return self.output_ports[node_id]
 
@@ -50,6 +57,7 @@ class Node:
     def get_input_port(self, node_id: str):
         """
         @brief      Returns the input port instance for the specified node
+        @param      node_id - Returns the input port associated with the node `node_id`
         """
         return self.input_ports[node_id]
 
@@ -90,15 +98,7 @@ class Node:
         pass
 
 
+    @abstractmethod
     def advance(self, current_cycle: int):
-
-        # if current_cycle < 5:
-        if (self.node_id == "A"):
-            pkt = Packet(pkt_id = str(current_cycle), src = "A", dst = "B", size = 8, cycle = current_cycle, is_ack = False)
-            self.send_pkt(pkt)
-
-        self.recv_pkt()
-
-        for output_port in self.output_ports.values():
-            output_port.send_pkt()
+        pass
         
