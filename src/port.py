@@ -41,6 +41,8 @@ class InputPort(Port):
         if len(self.fifo) < self.fifo_capacity:
             self.fifo.append(pkt)
             print(f"[+] Node {pkt.dst} received pkt {pkt.pkt_id} from Node {pkt.src}")
+        else:
+            print(f"[*] Node {pkt.dst} did not recv pkt {pkt.pkt_id} from Node {pkt.src}")
 
 
 class OutputPort(Port):
@@ -61,5 +63,9 @@ class OutputPort(Port):
             if self.dst_fifo_capacity > 0:
                 pkt = self.pending_sends.popleft()
                 self.connected_link.send_pkt(pkt)
-                self.dst_fifo_capacity -= 1
+                if pkt.is_ack == False:
+                    self.dst_fifo_capacity -= 1
                 print(f"[-] Node {pkt.src} sent pkt {pkt.pkt_id} to Node {pkt.dst}")
+            else:
+                print(f"[*] Node {self.parent_node.node_id} unable to send pkt")
+                

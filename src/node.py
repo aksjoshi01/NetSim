@@ -92,10 +92,10 @@ class Node:
 
     def advance(self, current_cycle: int):
 
-        if current_cycle < 5:
-            if (self.node_id == "A"):
-                pkt = Packet(pkt_id = str(current_cycle), src = "A", dst = "B", size = 8, cycle = current_cycle, is_ack = False)
-                self.send_pkt(pkt)
+        # if current_cycle < 5:
+        if (self.node_id == "A"):
+            pkt = Packet(pkt_id = str(current_cycle), src = "A", dst = "B", size = 8, cycle = current_cycle, is_ack = False)
+            self.send_pkt(pkt)
 
         self.recv_pkt()
 

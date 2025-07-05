@@ -62,7 +62,7 @@ class Simulator:
 
 
 if __name__ == "__main__":
-    sim = Simulator(max_cycles = 15)
+    sim = Simulator(max_cycles = 30)
 
     # Create nodes
     nodeA = Node("A")
@@ -73,12 +73,12 @@ if __name__ == "__main__":
     link_BtoA = Link("B-to-A", None, None, latency = 3)
 
     # Create ports for Node A
-    nodeA.add_output_port("B", link_AtoB, 2, nodeA)
-    nodeA.add_input_port("B", link_BtoA, 2, nodeA)
+    nodeA.add_output_port("B", link_AtoB, 6, nodeA)
+    nodeA.add_input_port("B", link_BtoA, 6, nodeA)
 
     # Create ports for Node B
-    nodeB.add_output_port("A", link_BtoA, 2, nodeB)
-    nodeB.add_input_port("A", link_AtoB, 2, nodeB)
+    nodeB.add_output_port("A", link_BtoA, 6, nodeB)
+    nodeB.add_input_port("A", link_AtoB, 6, nodeB)
 
     # Connect output port of A to input port of B
     link_AtoB.add_src(nodeA.get_output_port("B"))
