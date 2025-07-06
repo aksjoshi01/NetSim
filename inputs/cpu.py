@@ -1,18 +1,12 @@
 """
 @file       cpu.py
-@brief
 @author     Akshay Joshi
 """
-
 
 from node import Node
 from packet import Packet
 
-
 class CPU(Node):
-    """
-    @brief
-    """
     def __init__(self, node_id: str):
         super().__init__(node_id)
         self.processing_latency = 0
@@ -27,15 +21,14 @@ class CPU(Node):
 
 
     def advance(self, current_cycle: int):
-        """
-        @brief      Performs some operations every cycle of the simulation
-        """
         super().advance(current_cycle)
         if (self.node_id == "A"):
-            pkt = Packet(pkt_id = str(current_cycle), src = "A", dst = "B", size = 8, cycle = current_cycle, is_ack = False)
-            self.send_pkt(pkt)
-
+            msg = self.node_id + str(current_cycle)
+            pkt = Packet(pkt_id = str(current_cycle), message = msg)
+            status = self.send_pkt(pkt, "AsendsB")
+            if status < 0:
+                print(f"[#] ERROR: unable to send pkt {pkt.pkt_id}")
+            else:
+                print(f"[-] Node '{self.node_id}' sent pkt {pkt.pkt_id}")
+        
         self.recv_pkt()
-
-        for output_port in self.output_ports.values():
-            output_port.send_pkt()

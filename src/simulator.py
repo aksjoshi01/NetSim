@@ -1,9 +1,7 @@
 """
 @file       simulator.py
-@brief      A cycle-accurate network simulator
 @author     Akshay Joshi
 """         
-
 
 from collections import deque
 from typing import Dict, List, Optional
@@ -16,7 +14,6 @@ import importlib
 import os
 import sys
 
-
 class Simulator:
     """
     @class      Simulator
@@ -28,28 +25,15 @@ class Simulator:
         self.max_cycles = max_cycles
         self.nodes: Dict[str, Node] = {}
         self.links: Dict[str, Link] = {}
-        self.current_cycle = 0
 
 
     def add_node(self, node: 'Node'):
-        """
-        @brief      Add a node to the simulator
-        @param      node - Node instance to be added
-        """
-        self.nodes[node.node_id] = node
+        self.nodes[node.get_node_id()] = node
 
     def add_link(self, link: 'Link'):
-        """
-        @brief      Add a link to the simulator
-        @param      link - Link instance to be added
-        """
-        self.links[link.link_id] = link
+        self.links[link.get_link_id()] = link
 
     def run(self):
-        """
-        @brief      Run the simulator for a specified number of cycles. 
-                    During each cycle, the simulator wakes up each link and node to perform their operations.
-        """
         for cycle in range(self.max_cycles):
             print(f"\n=== Cycle {cycle} ===")
 
@@ -58,8 +42,6 @@ class Simulator:
 
             for node in self.nodes.values():
                 node.advance(cycle)
-
-            self.current_cycle += 1    
 
 
 if __name__ == "__main__":
@@ -100,28 +82,18 @@ if __name__ == "__main__":
         print("Error: Could not find node A and/or node B after dynamic loading. Exiting.")
         sys.exit(1)
 
-    # Create the link between the nodes
-    link_AtoB = Link("A-to-B", None, None, latency = 3)
-    link_BtoA = Link("B-to-A", None, None, latency = 3)
+    # Create the link
+    link_AtoB = Link(link_id = "AtoB", latency = 3)
 
-    # Create ports for node A
-    nodeA.add_output_port("B", link_AtoB, 2 * link_AtoB.get_latency())
-    nodeA.add_input_port("B", link_BtoA, 2 * link_BtoA.get_latency())
-
-    # Create ports for node B
-    nodeB.add_output_port("A", link_BtoA, 2 * link_BtoA.get_latency())
-    nodeB.add_input_port("A", link_AtoB, 2 * link_AtoB.get_latency())
+    # Create ports that serve as endpoints for the link
+    nodeA.add_output_port("AsendsB", link_AtoB, link_AtoB.get_latency())
+    nodeB.add_input_port("BrecvsA", link_AtoB, link_AtoB.get_latency())
 
     # Connect output port of A to input port of B
-    link_AtoB.add_src(nodeA.get_output_port("B"))
-    link_AtoB.add_dst(nodeB.get_input_port("A"))
+    link_AtoB.add_output_port(nodeA.get_output_port("AsendsB"))
+    link_AtoB.add_input_port(nodeB.get_input_port("BrecvsA"))
 
-    # Connect output port of B to input port of A
-    link_BtoA.add_src(nodeB.get_output_port("A"))
-    link_BtoA.add_dst(nodeA.get_input_port("B"))
-
-    # Add all the links
+    # Add the link
     sim.add_link(link_AtoB)
-    sim.add_link(link_BtoA)
 
     sim.run()

@@ -1,76 +1,66 @@
 """
 @file       link.py
-@brief      A link logically connects two ports.
-            Source is the OutputPort of one node.
-            Destination is the InputPort of another node.
 @author     Akshay Joshi
 """
-
 
 from collections import deque
 from typing import Optional
 
 from packet import Packet
 
-
 class Link:
-    """
-    @brief      Consists of data members like the source port, destination port, latency of the link and link ID.
-    """
-    def __init__(self, link_id: str, src: 'OutputPort', dst: 'InputPort', latency: int):
+    def __init__(self, link_id: str, latency: int):
         self.link_id = link_id
-        self.src = src
-        self.dst = dst
+        self.output_port = None
+        self.input_port = None
         self.latency = latency
-        self.fifo: deque[Optional[Packet]] = deque([None] * latency)
-        
-    
-    def add_src(self, src: 'OutputPort'):
-        """
-        @brief      Add a source port to the link.
-        @param      src - The source port to be added.
-        """
-        self.src = src
-
-
-    def add_dst(self, dst: 'InputPort'):
-        """
-        @brief      Add a destination port to the link.
-        @param      dest - The destination port to be added.  
-        """
-        self.dst = dst
+        self.pipeline: deque[Optional[Packet]] = deque([None] * latency)
+        self.credit_pipeline: deque[bool] = deque([False] * latency)
 
     
+    def add_output_port(self, output_port: 'OutputPort'):
+        self.output_port = output_port
+
+
+    def add_input_port(self, input_port: 'InputPort'):
+        self.input_port = input_port
+
+    
+    def get_link_id(self):
+        return self.link_id
+
+
     def get_latency(self):
-        """
-        @brief      Returns the latency of the link.
-        """
         return self.latency
 
 
     def send_pkt(self, pkt: 'Packet'):
-        """
-        @brief      Insert pkt at the end of the fifo
-        @param      pkt to be sent over the link
-        """
-        if self.fifo[-1] is None:
-            self.fifo[-1] = pkt
-            return True
-        else:
-            return False
+        if pkt is None or not isinstance(pkt, Packet):
+            return -1
+        
+        if self.pipeline[-1] is None:
+            self.pipeline[-1] = pkt
+            return 0
+
+        return -2
+
+
+    def send_credit(self):
+        if self.credit_pipeline[-1] is False:
+            self.credit_pipeline[-1] = True
+            return 0
+
+        return -2
 
 
     def advance(self, current_cycle: int):
-        """
-        @brief      Simulate the forwarding of packet over the link. The fifo is initially filled with None values.
-                    We simulate the advancing of the packet by popping the pkt from the left of the fifo.
-                    If the popped pkt is not None, then we know that the packet has reached its 
-                    destination. This is possible because the initial fifo size is equal to the latency 
-                    of the link.
-        @param      current_cycle - current time according to the simulator
-        """
-        arriving_pkt = self.fifo.popleft()
-        if arriving_pkt:
-            self.dst.recv_pkt(arriving_pkt)
+        # Advance the packets
+        pkt = self.pipeline.popleft()
+        if pkt is not None:
+            self.input_port.recv_from_link(pkt)
+        self.pipeline.append(None)
 
-        self.fifo.append(None)
+        # Advance the credits
+        if self.credit_pipeline.popleft():
+            self.output_port.increment_credit()
+        self.credit_pipeline.append(False)
