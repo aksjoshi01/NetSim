@@ -21,7 +21,6 @@ class InputPort(Port):
         self.fifo_size = fifo_size
         self.fifo: deque[Packet] = deque()
 
-
     def recv_pkt(self):
         if len(self.fifo) > 0:
             status = self.connected_link.send_credit()
@@ -30,7 +29,6 @@ class InputPort(Port):
             return self.fifo.popleft()
         
         return None
-
 
     def recv_from_link(self, pkt: 'Packet'):
         if len(self.fifo) < self.fifo_size:
@@ -42,15 +40,12 @@ class OutputPort(Port):
         super().__init__(port_id, connected_link)
         self.credit = credit
 
-
     def increment_credit(self):
         self.credit += 1
         print(f"[^] Port '{self.port_id}' received credit")
 
-
     def decrement_credit(self):
         self.credit -= 1
-
 
     def send_pkt(self, pkt: 'Packet'):
         if pkt is None or not isinstance(pkt, Packet):

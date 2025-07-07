@@ -17,22 +17,17 @@ class Link:
         self.pipeline: deque[Optional[Packet]] = deque([None] * latency)
         self.credit_pipeline: deque[bool] = deque([False] * latency)
 
-    
     def add_output_port(self, output_port: 'OutputPort'):
         self.output_port = output_port
-
 
     def add_input_port(self, input_port: 'InputPort'):
         self.input_port = input_port
 
-    
     def get_link_id(self):
         return self.link_id
 
-
     def get_latency(self):
         return self.latency
-
 
     def send_pkt(self, pkt: 'Packet'):
         if pkt is None or not isinstance(pkt, Packet):
@@ -44,14 +39,12 @@ class Link:
 
         return -2
 
-
     def send_credit(self):
         if self.credit_pipeline[-1] is False:
             self.credit_pipeline[-1] = True
             return 0
 
         return -2
-
 
     def advance(self, current_cycle: int):
         # Advance the packets

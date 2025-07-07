@@ -20,32 +20,30 @@ class Simulator:
     @brief      A simple network simulator that manages nodes and links. The simulator allows adding nodes and links, 
                 and simulates the network operation over a specified number of cycles. 
     """
-
     def __init__(self, max_cycles):
-        self.max_cycles = max_cycles
-        self.nodes: Dict[str, Node] = {}
-        self.links: Dict[str, Link] = {}
-
+        self.__max_cycles = max_cycles
+        self.__nodes: Dict[str, Node] = {}
+        self.__links: Dict[str, Link] = {}
 
     def add_node(self, node: 'Node'):
-        self.nodes[node.get_node_id()] = node
+        self.__nodes[node.get_node_id()] = node
 
     def add_link(self, link: 'Link'):
-        self.links[link.get_link_id()] = link
+        self.__links[link.get_link_id()] = link
 
     def run(self):
-        for cycle in range(self.max_cycles):
+        for cycle in range(self.__max_cycles):
             print(f"\n=== Cycle {cycle} ===")
 
-            for link in self.links.values():
+            for link in self.__links.values():
                 link.advance(cycle)
 
-            for node in self.nodes.values():
+            for node in self.__nodes.values():
                 node.advance(cycle)
 
 
 if __name__ == "__main__":
-    sim = Simulator(max_cycles = 30)
+    sim = Simulator(30)
 
     # Hardcode the file path and class name for now
     user_nodes_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "inputs")

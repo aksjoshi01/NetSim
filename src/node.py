@@ -16,26 +16,20 @@ class Node:
         self.input_ports: Dict[str, 'InputPort'] = {}
         self.output_ports: Dict[str, 'OutputPort'] = {}
 
-
     def get_node_id(self):
         return self.node_id
-
 
     def add_input_port(self, port_id: str, link: 'Link', fifo_size: int):
         self.input_ports[port_id] = InputPort(port_id, link, fifo_size)
 
-
     def add_output_port(self, port_id: str, link: 'Link', credit: int):
         self.output_ports[port_id] = OutputPort(port_id, link, credit)
-
 
     def get_output_port(self, port_id: str):
         return self.output_ports[port_id]
 
-
     def get_input_port(self, port_id: str):
         return self.input_ports[port_id]
-
 
     def send_pkt(self, pkt: 'Packet', port_id: str):
         if pkt is None or not isinstance(pkt, Packet):
@@ -47,18 +41,20 @@ class Node:
 
         return output_port.send_pkt(pkt)
 
-
-    def recv_pkt(self):
-        for input_port in self.input_ports.values():
-            pkt = input_port.recv_pkt()
-            if pkt is not None:
-                print(f"[+] Node {self.node_id} received pkt {pkt.pkt_id}")
+    def recv_pkt(self, port_id: str):
+        input_port = self.input_ports.get(port_id)
+        if input_port is None:
+            return None
         
-
+        pkt = input_port.recv_pkt()
+        if pkt is not None:
+            return pkt
+        
+        return None
+        
     @abstractmethod
     def process_pkt(self, pkt: 'Packet'):
         pass
-
 
     @abstractmethod
     def advance(self, current_cycle: int):

@@ -11,14 +11,11 @@ class CPU(Node):
         super().__init__(node_id)
         self.processing_latency = 0
 
-
     def add_latency(self, processing_latency: int):
         self.processing_latency = processing_latency
 
-
     def process_pkt(self, pkt: 'Packet'):
         pass
-
 
     def advance(self, current_cycle: int):
         super().advance(current_cycle)
@@ -31,4 +28,6 @@ class CPU(Node):
             else:
                 print(f"[-] Node '{self.node_id}' sent pkt {pkt.pkt_id}")
         
-        self.recv_pkt()
+        pkt = self.recv_pkt("BrecvsA")
+        if pkt is not None:
+            print(f"[+] Node {self.node_id} received pkt {pkt.pkt_id}")
