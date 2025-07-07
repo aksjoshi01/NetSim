@@ -5,5 +5,8 @@
 
 class Packet:
     def __init__(self, pkt_id: str, message: str):
-        self.pkt_id = pkt_id
-        self.message = message
+        self.__pkt_id = pkt_id
+        self.__message = message
+
+    def get_pkt_id(self):
+        return self.__pkt_id
