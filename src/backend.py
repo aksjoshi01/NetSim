@@ -1,5 +1,6 @@
 """
 @file       backend.py
+@brief      Provides the backend interface for building and executing custom simulations.
 @author     Akshay Joshi
 """
 
@@ -10,9 +11,15 @@ import sys
 from node import Node
 from link import Link
 from packet import Packet
+from port import OutputPort, InputPort
 from simulator import Simulator
 
 if __name__ == "__main__":
+    """
+    @brief      The simulation runs for 30 cycles. 2 nodes are instantiated
+                dynamically from CPU class and a link is created between them. 
+                Node A has 1 output port and Node B has 1 input port. 
+    """
     sim = Simulator(30)
 
     # Hardcode the file path and class name for now
@@ -35,13 +42,14 @@ if __name__ == "__main__":
         try:
             user_module = importlib.import_module(module_name)
             UserNodeClass = getattr(user_module, class_name)
-            new_node = UserNodeClass(node_id)
+            new_node = UserNodeClass()
+            new_node.set_node_id(node_id)
             sim.add_node(new_node)
             instantiated_nodes[node_id] = new_node
 
         except (ImportError, AttributeError) as e:
             print(f"Error loading user-defined node '{node_id}' from module '{module_name}' class '{class_name}': {e}")
-            sys.exit(1)
+            sys.exit(-1)
 
     nodeA = instantiated_nodes.get("A")
     nodeB = instantiated_nodes.get("B")
@@ -51,15 +59,34 @@ if __name__ == "__main__":
         sys.exit(-1)
 
     # Create the link
-    link_AtoB = Link(link_id = "AtoB", latency = 3)
+    link_AtoB = Link()
+    link_AtoB.set_link_id("AtoB")
+    link_AtoB.set_latency(3)
+    link_AtoB.init_fifos()
 
-    # Create ports that serve as endpoints for the link
-    nodeA.add_output_port("AsendsB", link_AtoB, link_AtoB.get_latency())
-    nodeB.add_input_port("BrecvsA", link_AtoB, link_AtoB.get_latency())
+    # Create output port for A
+    output_port_A = OutputPort()
+    output_port_A.set_port_id("AsendsB")
+    output_port_A.set_connected_link(link_AtoB)
+    output_port_A.set_credit(2 * link_AtoB.get_latency())
+
+    # Create input port for B
+    input_port_B = InputPort()
+    input_port_B.set_port_id("BrecvsA")
+    input_port_B.set_connected_link(link_AtoB)
+    input_port_B.set_fifo_size(2 * link_AtoB.get_latency())
+
+    # Store ports in the Node
+    nodeA.add_output_port(output_port_A)
+    nodeB.add_input_port(input_port_B)
+
+    # Add the ports
+    sim.add_output_port(output_port_A)
+    sim.add_input_port(input_port_B)
 
     # Connect output port of A to input port of B
-    link_AtoB.add_output_port(nodeA.get_output_port("AsendsB"))
-    link_AtoB.add_input_port(nodeB.get_input_port("BrecvsA"))
+    link_AtoB.set_output_port(output_port_A)
+    link_AtoB.set_input_port(input_port_B)
 
     # Add the link
     sim.add_link(link_AtoB)
