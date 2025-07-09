@@ -1,0 +1,2 @@
+src_node,src_port,dst_node,dst_port,credit,fifo_size,latency
+A,AsendsB,B,BrecvsA,6,6,3

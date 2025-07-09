@@ -4,12 +4,16 @@
 @author     Akshay Joshi
 """         
 
+import os
+import importlib
+
 from typing import Dict
 
 from node import Node
 from link import Link
 from packet import Packet
 from port import OutputPort, InputPort
+from parser import Parser
 
 class Simulator:
     """
@@ -79,3 +83,73 @@ class Simulator:
 
             for node in self.__nodes.values():
                 node.advance(cycle)
+
+    def build_nodes(self, parser, user_nodes_dir):
+        """
+        @brief      Instantiates the nodes based on the information from the parsed data.
+        @param      parser - parsed data that contains information about the nodes.
+        @param      user_nodes_dir  - path to the directory that contains user nodes that is 
+                    used to tell the system to include the specified directory when looking 
+                    for modules.
+        """
+        if user_nodes_dir not in os.sys.path:
+            os.sys.path.append(user_nodes_dir)
+        
+        for row in parser.node_specs:
+            module_name = row["module"]
+            class_name = row["class"]
+            node_id = row["node_id"]
+
+            user_module = importlib.import_module(module_name)
+            NodeClass = getattr(user_module, class_name)
+            
+            node = NodeClass()
+            node.set_node_id(node_id)
+            self.add_node(node)
+
+    def build_connections(self, parser):
+        """
+        @brief      Instantiates the output ports, input ports and links and connects them.
+        @param      parser - parsed data that contains the topology of the network.
+        """
+        for row in parser.connection_specs:
+            src_node_id = row["src_node"]
+            dst_node_id = row["dst_node"]
+            output_port_id = row["src_port"]
+            input_port_id = row["dst_port"]
+            
+            try:
+                credit = int(row["credit"])
+                fifo_size = int(row["fifo_size"])
+                latency = int(row["latency"])
+            except ValueError:
+                raise ValueError(f"Invalid integer")
+            
+            src_node = self.__nodes[src_node_id]
+            dst_node = self.__nodes[dst_node_id]
+
+            link = Link()
+            link_id = f"link_{src_node_id}_{output_port_id}_to_{dst_node_id}_{input_port_id}"
+            link.set_link_id(link_id)
+            link.set_latency(latency)
+            link.init_fifos()
+
+            output_port = OutputPort()
+            output_port.set_port_id(output_port_id)
+            output_port.set_credit(credit)
+            output_port.set_connected_link(link)
+
+            input_port = InputPort()
+            input_port.set_port_id(input_port_id)
+            input_port.set_fifo_size(fifo_size)
+            input_port.set_connected_link(link)
+
+            link.set_output_port(output_port)
+            link.set_input_port(input_port)
+
+            src_node.add_output_port(output_port)
+            dst_node.add_input_port(input_port)
+
+            self.add_output_port(output_port)
+            self.add_input_port(input_port)
+            self.add_link(link)
