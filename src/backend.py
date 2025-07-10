@@ -12,12 +12,11 @@ from packet import Packet
 from port import OutputPort, InputPort
 from simulator import Simulator
 from parser import Parser
+from plotter import Plotter
 
 if __name__ == "__main__":
     """
-    @brief      The simulation runs for 30 cycles. 2 nodes are instantiated
-                dynamically from CPU class and a link is created between them. 
-                Node A has 1 output port and Node B has 1 input port. 
+    @brief      The simulation runs for 10 cycles.
     """
     base_dir = os.path.dirname(os.path.abspath(__file__))
     config_dir = os.path.join(base_dir, "..", "config")
@@ -26,7 +25,8 @@ if __name__ == "__main__":
     parser = Parser(config_dir)
     parser.parse()
 
-    sim = Simulator(30)
+    sim = Simulator(10)
     sim.build_nodes(parser, user_nodes_dir)
     sim.build_connections(parser)
     sim.run()
+    sim.get_stats()

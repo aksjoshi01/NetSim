@@ -71,6 +71,12 @@ class Node:
         assert output_port.get_port_id() not in self.__output_ports, "Error: cannot add output port with duplicate ID"
         self.__output_ports[output_port.get_port_id()] = output_port
 
+    def get_input_ports(self):
+        return self.__input_ports
+
+    def get_output_ports(self):
+        return self.__output_ports
+
     def send_pkt(self, pkt: 'Packet', port_id: str, current_cycle: int):
         """
         @brief      Sends a packet to the output port of the node.
@@ -111,4 +117,7 @@ class Node:
     @abstractmethod
     def advance(self, current_cycle: int):
         pass
-        
+
+    @abstractmethod
+    def get_stats(self):
+        pass     

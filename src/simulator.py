@@ -84,6 +84,14 @@ class Simulator:
             for node in self.__nodes.values():
                 node.advance(cycle)
 
+    def get_stats(self):
+        """
+        @brief      Generates statistics for each of the nodes.
+        """
+        print(f"\n+++ Statistics +++")
+        for node in self.__nodes.values():
+            node.get_stats()
+
     def build_nodes(self, parser, user_nodes_dir):
         """
         @brief      Instantiates the nodes based on the information from the parsed data.

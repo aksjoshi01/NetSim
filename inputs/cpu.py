@@ -19,8 +19,7 @@ class CPU(Node):
 
     def advance(self, current_cycle: int):
         """
-        @brief      Attempts to send a packet every clock, as well as receive
-                    incoming packets.
+        @brief      Attempts to send a packet every clock, as well as receive incoming packets.
         @param      current_cycle - current simulation time.
         """
         super().advance(current_cycle)

@@ -1,3 +1,6 @@
 module,class,node_id
-cpu,CPU,A
-cpu,CPU,B
+producer,Producer,A0
+producer,Producer,A1
+producer,Producer,A2
+switch,Switch,S
+consumer,Consumer,B
