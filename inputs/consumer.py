@@ -27,7 +27,7 @@ class Consumer(Node):
         for port in self.get_input_ports().values():
             pkt = port.recv_pkt(cycle)
             if pkt:
-                print(f"{self.get_node_id()} received packet {pkt.get_pkt_id()} on {port.get_port_id()}")
+                print(f"[+] {self.get_node_id()} received packet {pkt.get_pkt_id()} on {port.get_port_id()}")
                 self.pkts_recvd += 1
                 self.log[cycle] = True
 

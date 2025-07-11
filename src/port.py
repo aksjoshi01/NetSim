@@ -133,6 +133,9 @@ class OutputPort(Port):
         assert credit > 0, "Error: initial credit should be greater than zero"
         self.__credit = credit
 
+    def get_credit(self):
+        return self.__credit
+
     def increment_credit(self):
         """
         @brief      Increments the credit by one.

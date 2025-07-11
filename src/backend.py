@@ -25,7 +25,7 @@ if __name__ == "__main__":
     parser = Parser(config_dir)
     parser.parse()
 
-    sim = Simulator(10)
+    sim = Simulator(50)
     sim.build_nodes(parser, user_nodes_dir)
     sim.build_connections(parser)
     sim.run()

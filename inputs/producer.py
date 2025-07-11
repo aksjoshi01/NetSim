@@ -24,22 +24,39 @@ class Producer(Node):
         @brief      Generates packets every cycle and attempts to send it.
         @param      cycle - an integer representing current simulation time.
         """
+
+        # if self.get_node_id() == "A1" or self.get_node_id() == "A2":
+        #     return
+
+        # if self.get_node_id() == "A0":
+        #     stream_rate = 1
+        # elif self.get_node_id() == "A1":
+        #     stream_rate = 2
+        # elif self.get_node_id() == "A2":
+        #     stream_rate = 4
+        # else:
+        #     return
+
+        stream_rate = 1
+
+        if cycle % stream_rate != 0:
+            return
+
         output_ports = self.get_output_ports()
         if not output_ports:
             self.log[cycle] = False
             return
 
-        pkt_id = self.get_node_id() + "_" + str(cycle)
+        pkt_id = self.get_node_id() + "_" + str(self.pkts_sent)
         data = "__" + self.get_node_id() + "___" + str(cycle)
         packet = Packet(pkt_id, data)
         
         output_port = next(iter(output_ports.values()))
-        # output_port = list(output_ports.values())[0]
         if output_port.send_pkt(packet, cycle) < 0:
-            print(f"{self.get_node_id()} unable to send packet {pkt_id}")
+            print(f"[#] Error: {self.get_node_id()} unable to send packet {pkt_id}")
             self.log[cycle] = False
         else:
-            print(f"{self.get_node_id()} sent packet {pkt_id}")
+            print(f"[-] {self.get_node_id()} sent packet {pkt_id} => curr_credit = {output_port.get_credit()}")
             self.pkts_sent += 1
             self.log[cycle] = True
 
