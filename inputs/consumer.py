@@ -2,6 +2,8 @@
 @file       consumer.py
 @brief      A consumer node that receives packets and prints them.
 """
+import logging
+logger = logging.getLogger(__name__)
 
 from node import Node
 from plotter import Plotter
@@ -17,6 +19,7 @@ class Consumer(Node):
         super().__init__()
         self.pkts_recvd = 0
         self.log = {}
+        self.rate = 4
 
     def advance(self, cycle):
         """
@@ -24,10 +27,13 @@ class Consumer(Node):
         @param      cycle - an integer representing current simulation time.
         """
         self.log[cycle] = False
+        # if cycle % self.rate  != 0:
+        #     return
+
         for port in self.get_input_ports().values():
             pkt = port.recv_pkt(cycle)
             if pkt:
-                print(f"[+] {self.get_node_id()} received packet {pkt.get_pkt_id()} on {port.get_port_id()}")
+                logger.info(f"{self.get_node_id()} received packet {pkt.get_pkt_id()} on {port.get_port_id()}")
                 self.pkts_recvd += 1
                 self.log[cycle] = True
 
@@ -35,6 +41,6 @@ class Consumer(Node):
         """
         @brief      Prints the total packets received and generates a per-cycle plot.
         """
-        print(f"Consumer {self.get_node_id()} received a total of {self.pkts_recvd} packets")
+        logger.info(f"Consumer {self.get_node_id()} received a total of {self.pkts_recvd} packets")
         plotter = Plotter(self.log, self.get_node_id())
         plotter.plot_graph("Receive")

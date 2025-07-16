@@ -6,7 +6,7 @@
 
 import os
 import importlib
-
+import logging
 from typing import Dict
 
 from node import Node
@@ -14,6 +14,8 @@ from link import Link
 from packet import Packet
 from port import OutputPort, InputPort
 from parser import Parser
+
+logger = logging.getLogger(__name__)
 
 class Simulator:
     """
@@ -76,19 +78,21 @@ class Simulator:
                     the `advance()` method on all registered links and nodes.
         """
         for cycle in range(self.__max_cycles):
-            print(f"\n=== Cycle {cycle} ===")
+            logger.info(f"=== Cycle {cycle} ===")
 
             for link in self.__links.values():
                 link.advance(cycle)
 
             for node in self.__nodes.values():
                 node.advance(cycle)
+            
+            logger.info(f"\n")
 
     def get_stats(self):
         """
         @brief      Generates statistics for each of the nodes.
         """
-        print(f"\n+++ Statistics +++")
+        logger.info(f"+++ Statistics +++")
         for node in self.__nodes.values():
             node.get_stats()
 

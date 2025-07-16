@@ -4,10 +4,13 @@
 @author     Akshay Joshi
 """
 
+import logging
 from collections import deque
 
 from link import Link
 from packet import Packet, CreditPacket
+
+logger = logging.getLogger(__name__)
 
 class Port:
     """
@@ -141,7 +144,7 @@ class OutputPort(Port):
         @brief      Increments the credit by one.
         """
         self.__credit += 1
-        print(f"[^] Port '{self.get_port_id()}' received credit")
+        logger.debug(f"[^] Port '{self.get_port_id()}' received credit")
 
     def decrement_credit(self):
         """

@@ -4,6 +4,8 @@
 """
 
 from collections import deque
+import logging
+logger = logging.getLogger(__name__)
 
 from node import Node
 from packet import Packet
@@ -50,11 +52,11 @@ class Switch(Node):
             if ready_cycle == cycle:
                 self.pipeline.popleft()
                 if output_port.send_pkt(pkt, cycle) == 0:
-                    print(f"[>] Switch forwarded packet {pkt.get_pkt_id()} from {input_port_id} to {output_port.get_port_id()}")
+                    logger.info(f"Switch forwarded packet {pkt.get_pkt_id()} from {input_port_id} to {output_port.get_port_id()}")
                     self.pkts_forwarded += 1
                     self.log[cycle] = True
                 else:
-                    print(f"[#] Error: Switch unable to send packet {pkt.get_pkt_id()}")                   
+                    logger.error(f"Switch unable to send packet {pkt.get_pkt_id()}")                   
 
         # Round-robin over input ports
         for i in range(num_inputs):
@@ -62,7 +64,7 @@ class Switch(Node):
             input_port = input_ports[port_idx]
             pkt = input_port.recv_pkt(cycle)
             if pkt:
-                print(f"[+] Switch received packet {pkt.get_pkt_id()} from {input_port.get_port_id()}")
+                logger.info(f"[+] Switch received packet {pkt.get_pkt_id()} from {input_port.get_port_id()}")
                 ready_cycle = cycle + self.processing_latency
                 self.pipeline.append((ready_cycle, pkt, input_port.get_port_id()))
                 self.rr_index = (port_idx + 1) % num_inputs
@@ -72,6 +74,6 @@ class Switch(Node):
         """
         @brief      Prints the total packets forwarded and generates a per-cycle plot.
         """
-        print(f"Switch {self.get_node_id()} forwarded a total of {self.pkts_forwarded} packets")
+        logger.info(f"Switch {self.get_node_id()} forwarded a total of {self.pkts_forwarded} packets")
         plotter = Plotter(self.log, self.get_node_id())
         plotter.plot_graph("Forward")
