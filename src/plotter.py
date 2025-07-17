@@ -27,7 +27,7 @@ class Plotter:
         successes = [int(self.__log[cycle]) for cycle in cycles]
 
         plt.plot(cycles, successes)
-        plt.title(f"{event} Success per Cycle - {self.__node_id}")
+        plt.title(f"{event} per Cycle - {self.__node_id}")
         plt.xlabel("Cycle")
         plt.ylabel(f"{event} (1=Yes, 0=No)")
         plt.grid(True)

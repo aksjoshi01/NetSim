@@ -87,19 +87,10 @@ class Simulator:
                 link.advance(cycle)
 
             for node in self.__nodes.values():
+                node.stats.log_node_activity(node.get_node_id(), cycle, False)
                 node.advance(cycle)
             print(f"\n")
 
-        self.stats.dump_summary()
-
-        
-    def get_stats(self):
-        """
-        @brief      Generates statistics for each of the nodes.
-        """
-        # logger.info(f"+++ Statistics +++")
-        # for node in self.__nodes.values():
-        #     node.get_stats()
         self.stats.dump_summary()
 
     def build_nodes(self, parser, user_nodes_dir):

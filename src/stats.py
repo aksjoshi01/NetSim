@@ -1,6 +1,6 @@
 """
 @file       stats.py
-@brief
+@brief      Collects various statistics and prints the summary.
 @author     Akshay Joshi
 """
 
@@ -11,7 +11,8 @@ class Stats:
         self.total_cycles = 0
         self.total_pkts_sent = 0
         self.total_pkts_dlvrd = 0
-
+        self.per_cycle_link_utilization = []
+        self.node_activity = defaultdict(dict)
         self.node_stats = defaultdict(lambda: {
             "pkts_sent": 0,
             "pkts_recvd": 0
@@ -20,9 +21,6 @@ class Stats:
             "utilized_cycles": 0,
             "total_pkts_transmitted": 0
         })
-
-        self.per_cycle_link_utilization = []
-        self.node_activity = defaultdict(dict)
 
     def increment_pkt_sent(self, node_id):
         self.total_pkts_sent += 1

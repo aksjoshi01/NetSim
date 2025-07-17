@@ -17,7 +17,6 @@ class Consumer(Node):
         @brief      A constructor for the Consumer class.
         """
         super().__init__()
-        self.pkts_recvd = 0
         self.rate = 4
 
     def advance(self, cycle):
@@ -26,14 +25,12 @@ class Consumer(Node):
         @param      cycle - an integer representing current simulation time.
         """
         
-        self.stats.log_node_activity(self.get_node_id(), cycle, False)
         # if cycle % self.rate  != 0:
         #     return
 
-        for port in self.get_input_ports().values():
-            pkt = port.recv_pkt(cycle)
-            if pkt:
-                logger.info(f"{self.get_node_id()} received packet {pkt.get_pkt_id()} on {port.get_port_id()}")
-                self.stats.increment_pkt_recvd(self.get_node_id())
-                self.pkts_recvd += 1
-                self.stats.log_node_activity(self.get_node_id(), cycle, True)
+        input_ports = self.get_input_ports()
+        input_port = next(iter(input_ports.values()))
+
+        pkt = self.recv_pkt(input_port.get_port_id(), cycle)
+        if pkt:
+            logger.info(f"{self.get_node_id()} received packet {pkt.get_pkt_id()} on {input_port.get_port_id()}")
