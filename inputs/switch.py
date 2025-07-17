@@ -23,7 +23,6 @@ class Switch(Node):
         super().__init__()
         self.rr_index = 0
         self.pkts_forwarded = 0
-        self.log = {}
         self.processing_latency = 2
         self.pipeline = deque()
 
@@ -36,7 +35,7 @@ class Switch(Node):
         input_ports = list(self.get_input_ports().values())
         output_ports = list(self.get_output_ports().values())
 
-        self.log[cycle] = False
+        self.stats.log_node_activity(self.get_node_id(), cycle, False)
 
         if not output_ports:
             return
@@ -54,7 +53,8 @@ class Switch(Node):
                 if output_port.send_pkt(pkt, cycle) == 0:
                     logger.info(f"Switch forwarded packet {pkt.get_pkt_id()} from {input_port_id} to {output_port.get_port_id()}")
                     self.pkts_forwarded += 1
-                    self.log[cycle] = True
+                    self.stats.log_node_activity(self.get_node_id(), cycle, True)
+                    self.stats.increment_pkt_sent(self.get_node_id())
                 else:
                     logger.error(f"Switch unable to send packet {pkt.get_pkt_id()}")                   
 
@@ -64,16 +64,9 @@ class Switch(Node):
             input_port = input_ports[port_idx]
             pkt = input_port.recv_pkt(cycle)
             if pkt:
-                logger.info(f"[+] Switch received packet {pkt.get_pkt_id()} from {input_port.get_port_id()}")
+                logger.info(f"Switch received packet {pkt.get_pkt_id()} from {input_port.get_port_id()}")
+                self.stats.increment_pkt_recvd(self.get_node_id())
                 ready_cycle = cycle + self.processing_latency
                 self.pipeline.append((ready_cycle, pkt, input_port.get_port_id()))
                 self.rr_index = (port_idx + 1) % num_inputs
                 break
-
-    def get_stats(self):
-        """
-        @brief      Prints the total packets forwarded and generates a per-cycle plot.
-        """
-        logger.info(f"Switch {self.get_node_id()} forwarded a total of {self.pkts_forwarded} packets")
-        plotter = Plotter(self.log, self.get_node_id())
-        plotter.plot_graph("Forward")

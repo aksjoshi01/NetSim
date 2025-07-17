@@ -10,6 +10,7 @@ from abc import abstractmethod
 
 from port import OutputPort, InputPort
 from packet import Packet
+from stats import Stats
 
 class Node:
     """
@@ -23,6 +24,10 @@ class Node:
         self.__input_ports: Dict[str, 'InputPort'] = {}
         self.__output_ports: Dict[str, 'OutputPort'] = {}
         self.__cycle = -1
+        self.stats = None
+
+    def set_stats(self, stats):
+        self.stats = stats
 
     def set_node_id(self, node_id: str):
         """
@@ -117,7 +122,3 @@ class Node:
     @abstractmethod
     def advance(self, current_cycle: int):
         pass
-
-    @abstractmethod
-    def get_stats(self):
-        pass     

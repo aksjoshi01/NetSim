@@ -20,13 +20,14 @@ class Producer(Node):
         """
         super().__init__()
         self.pkts_sent = 0
-        self.log = {}
 
     def advance(self, cycle):
         """
         @brief      Generates packets every cycle and attempts to send it.
         @param      cycle - an integer representing current simulation time.
         """
+
+        self.stats.log_node_activity(self.get_node_id(), cycle, False)
 
         # if self.get_node_id() == "A1" or self.get_node_id() == "A2":
         #     return
@@ -45,7 +46,6 @@ class Producer(Node):
 
         output_ports = self.get_output_ports()
         if not output_ports:
-            self.log[cycle] = False
             return
 
         pkt_id = self.get_node_id() + "_" + str(self.pkts_sent)
@@ -55,16 +55,8 @@ class Producer(Node):
         output_port = next(iter(output_ports.values()))
         if output_port.send_pkt(packet, cycle) < 0:
             logger.warning(f"{self.get_node_id()} unable to send packet {pkt_id}")
-            self.log[cycle] = False
         else:
             logger.info(f"{self.get_node_id()} sent packet {pkt_id} => curr_credit = {output_port.get_credit()}")
             self.pkts_sent += 1
-            self.log[cycle] = True
-
-    def get_stats(self):
-        """
-        @brief      Prints the total packets sent and generates a per-cycle plot.
-        """
-        logger.info(f"Producer {self.get_node_id()} sent a total of {self.pkts_sent} packets")
-        plotter = Plotter(self.log, self.get_node_id())
-        plotter.plot_graph("Send")
+            self.stats.log_node_activity(self.get_node_id(), cycle, True)
+            self.stats.increment_pkt_sent(self.get_node_id())

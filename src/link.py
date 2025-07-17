@@ -25,6 +25,10 @@ class Link:
         self.__pipeline = None
         self.__credit_pipeline = None
         self.__cycle = -1
+        self.stats = None
+
+    def set_stats(self, stats):
+        self.stats = stats
 
     def set_link_id(self, link_id):
         """
@@ -116,6 +120,13 @@ class Link:
         @brief      Advances the packets in the pipeline.
         @param      current_cycle - integer value representing the simulation time.
         """
+
+        self.stats.link_transmit(self.__link_id, active = False)
+
+        if len(self.__pipeline) > 0 or len(self.__credit_pipeline) > 0:
+            self.stats.link_transmit(self.__link_id, active = True)
+            self.stats.record_link_active(self.__link_id)
+    
         # Advance the packets
         if len(self.__pipeline) > 0:
             pkt = self.__pipeline[0]

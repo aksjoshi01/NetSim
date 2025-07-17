@@ -14,6 +14,7 @@ from link import Link
 from packet import Packet
 from port import OutputPort, InputPort
 from parser import Parser
+from stats import Stats
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +32,7 @@ class Simulator:
         self.__links: Dict[str, Link] = {}
         self.__output_ports: Dict[str, OutputPort] = {}
         self.__input_ports: Dict[str, InputPort] = {}
+        self.stats = Stats()
 
     def add_node(self, node: 'Node'):
         """
@@ -78,6 +80,7 @@ class Simulator:
                     the `advance()` method on all registered links and nodes.
         """
         for cycle in range(self.__max_cycles):
+            self.stats.start_cycle()
             logger.info(f"=== Cycle {cycle} ===")
 
             for link in self.__links.values():
@@ -85,16 +88,19 @@ class Simulator:
 
             for node in self.__nodes.values():
                 node.advance(cycle)
-            
-            logger.info(f"\n")
+            print(f"\n")
 
+        self.stats.dump_summary()
+
+        
     def get_stats(self):
         """
         @brief      Generates statistics for each of the nodes.
         """
-        logger.info(f"+++ Statistics +++")
-        for node in self.__nodes.values():
-            node.get_stats()
+        # logger.info(f"+++ Statistics +++")
+        # for node in self.__nodes.values():
+        #     node.get_stats()
+        self.stats.dump_summary()
 
     def build_nodes(self, parser, user_nodes_dir):
         """
@@ -117,6 +123,7 @@ class Simulator:
             
             node = NodeClass()
             node.set_node_id(node_id)
+            node.set_stats(self.stats)
             self.add_node(node)
 
     def build_connections(self, parser):
@@ -144,6 +151,7 @@ class Simulator:
             link_id = f"link_{src_node_id}_{output_port_id}_to_{dst_node_id}_{input_port_id}"
             link.set_link_id(link_id)
             link.set_latency(latency)
+            link.set_stats(self.stats)
             link.init_fifos()
 
             output_port = OutputPort()

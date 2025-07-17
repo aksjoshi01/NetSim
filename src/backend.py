@@ -34,14 +34,14 @@ def parse_args():
         "--config",
         type=str,
         required=True,
-        help="Path to the directory containing topology CSV files"
+        help="Relative path to the directory containing topology CSV files"
     )
 
     parser.add_argument(
         "--inputs",
         type=str,
         required=True,
-        help="Path to the directory containing user-defined node implementations"
+        help="Relative path to the directory containing user-defined node implementations"
     )
 
     parser.add_argument(
@@ -71,7 +71,7 @@ if __name__ == "__main__":
         logging.getLogger('matplotlib').setLevel(logging.WARNING)
         logging.basicConfig(
             level=getattr(logging, args.log_level),
-            format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+            format="[%(levelname)s] %(name)s: %(message)s",
             datefmt="%H:%M:%S"
         )
 
@@ -100,4 +100,3 @@ if __name__ == "__main__":
     sim.build_nodes(parser, user_nodes_dir)
     sim.build_connections(parser)
     sim.run()
-    sim.get_stats()
