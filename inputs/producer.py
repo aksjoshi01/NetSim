@@ -25,20 +25,20 @@ class Producer(Node):
         @brief      Generates packets every cycle and attempts to send it.
         @param      cycle - an integer representing current simulation time.
         """
-        if self.get_node_id() == "A1" or self.get_node_id() == "A2":
+        # if self.get_node_id() == "A1" or self.get_node_id() == "A2":
+            # return
+
+        if self.get_node_id() == "A0":
+            stream_rate = 1
+        elif self.get_node_id() == "A1":
+            stream_rate = 2
+        elif self.get_node_id() == "A2":
+            stream_rate = 4
+        else:
             return
 
-        # if self.get_node_id() == "A0":
-        #     stream_rate = 1
-        # elif self.get_node_id() == "A1":
-        #     stream_rate = 2
-        # elif self.get_node_id() == "A2":
-        #     stream_rate = 4
-        # else:
-        #     return
-
-        # if cycle % stream_rate != 0:
-        #     return
+        if cycle % stream_rate != 0:
+            return
 
         output_ports = self.get_output_ports()
         if not output_ports:

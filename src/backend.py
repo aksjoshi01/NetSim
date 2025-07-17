@@ -70,9 +70,10 @@ if __name__ == "__main__":
     else:
         logging.getLogger('matplotlib').setLevel(logging.WARNING)
         logging.basicConfig(
-            level=getattr(logging, args.log_level),
-            format="[%(levelname)s] %(name)s: %(message)s",
-            datefmt="%H:%M:%S"
+            filename = "../outputs/simulation.log",
+            filemode = "w",
+            level = getattr(logging, args.log_level),
+            format = "[%(levelname)s] %(name)s: %(message)s",
         )
 
     config_dir = os.path.abspath(args.config)

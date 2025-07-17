@@ -89,9 +89,10 @@ class Simulator:
             for node in self.__nodes.values():
                 node.stats.log_node_activity(node.get_node_id(), cycle, False)
                 node.advance(cycle)
-            print(f"\n")
+            logger.info(f"\n")
 
         self.stats.dump_summary()
+        print(f"Simulation completed. \nLog files, statistics and plots can be found in ../outputs/ directory")
 
     def build_nodes(self, parser, user_nodes_dir):
         """

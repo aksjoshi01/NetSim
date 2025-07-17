@@ -1,0 +1,15 @@
+===== Simulation Summary =====
+Total cycles: 30
+Total packets sent: 54
+Total packets received: 46
+
+--- Per Node ---
+Node A0: Sent = 30, Received = 0
+Node S: Sent = 24, Received = 26
+Node B: Sent = 0, Received = 20
+
+--- Per Link ---
+Link link_A0_A0_out_to_S_S0_in: Utilization = 96.67%, Packets Transmitted = 29
+Link link_A1_A1_out_to_S_S1_in: Utilization = 0.00%, Packets Transmitted = 0
+Link link_A2_A2_out_to_S_S2_in: Utilization = 0.00%, Packets Transmitted = 0
+Link link_S_S_out_to_B_B_in: Utilization = 76.67%, Packets Transmitted = 23

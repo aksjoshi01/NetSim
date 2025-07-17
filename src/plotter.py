@@ -26,26 +26,16 @@ class Plotter:
         cycles = sorted(self.__log.keys())
         successes = [int(self.__log[cycle]) for cycle in cycles]
 
-        plt.plot(cycles, successes)
-        plt.title(f"{event} per Cycle - {self.__node_id}")
+        plt.figure(figsize = (10, 4))
+        plt.bar(cycles, successes, color = 'skyblue', edgecolor = 'black', width = 0.8)
+        plt.title(f"{event} Success per Cycle - {self.__node_id}")
         plt.xlabel("Cycle")
         plt.ylabel(f"{event} (1=Yes, 0=No)")
-        plt.grid(True)
+        plt.ylim(0, 1.2)
+        plt.xticks(cycles)
+        plt.grid(axis = 'y', linestyle = '--', alpha = 0.7)
 
         filename = f"../outputs/{self.__node_id}_{event}_log.png"
+        plt.tight_layout()
         plt.savefig(filename, dpi=150)
         plt.close()
-
-        # plt.figure(figsize = (10, 4))
-        # plt.bar(cycles, successes, color = 'skyblue', edgecolor = 'black', width = 0.8)
-        # plt.title(f"{event} Success per Cycle - {self.__node_id}")
-        # plt.xlabel("Cycle")
-        # plt.ylabel(f"{event} (1=Yes, 0=No)")
-        # plt.ylim(0, 1.2)
-        # plt.xticks(cycles)
-        # plt.grid(axis = 'y', linestyle = '--', alpha = 0.7)
-
-        # filename = f"../outputs/{self.__node_id}_{event}_log.png"
-        # plt.tight_layout()
-        # plt.savefig(filename, dpi=150)
-        # plt.close()

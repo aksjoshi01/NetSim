@@ -1,0 +1,193 @@
+[INFO] __main__: Config directory: /home/akshayjo/Documents/netsim/config
+[INFO] __main__: Inputs directory: /home/akshayjo/Documents/netsim/inputs
+[INFO] __main__: Number of cycles: 30
+[INFO] simulator: === Cycle 0 ===
+[INFO] producer: A0 sent packet A0_0 => curr_credit = 7
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 1 ===
+[INFO] producer: A0 sent packet A0_1 => curr_credit = 6
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 2 ===
+[INFO] producer: A0 sent packet A0_2 => curr_credit = 5
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 3 ===
+[INFO] producer: A0 sent packet A0_3 => curr_credit = 4
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 4 ===
+[INFO] producer: A0 sent packet A0_4 => curr_credit = 3
+[INFO] switch: Switch received packet A0_0 from S0_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 5 ===
+[INFO] producer: A0 sent packet A0_5 => curr_credit = 2
+[INFO] switch: Switch received packet A0_1 from S0_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 6 ===
+[INFO] producer: A0 sent packet A0_6 => curr_credit = 1
+[INFO] switch: Switch forwarded packet A0_0 from S0_in to S_out
+[INFO] switch: Switch received packet A0_2 from S0_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 7 ===
+[INFO] producer: A0 sent packet A0_7 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_1 from S0_in to S_out
+[INFO] switch: Switch received packet A0_3 from S0_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 8 ===
+[INFO] producer: A0 sent packet A0_8 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_2 from S0_in to S_out
+[INFO] switch: Switch received packet A0_4 from S0_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 9 ===
+[INFO] producer: A0 sent packet A0_9 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_3 from S0_in to S_out
+[INFO] switch: Switch received packet A0_5 from S0_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 10 ===
+[INFO] producer: A0 sent packet A0_10 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_4 from S0_in to S_out
+[INFO] switch: Switch received packet A0_6 from S0_in
+[INFO] consumer: B received packet A0_0 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 11 ===
+[INFO] producer: A0 sent packet A0_11 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_5 from S0_in to S_out
+[INFO] switch: Switch received packet A0_7 from S0_in
+[INFO] consumer: B received packet A0_1 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 12 ===
+[INFO] producer: A0 sent packet A0_12 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_6 from S0_in to S_out
+[INFO] switch: Switch received packet A0_8 from S0_in
+[INFO] consumer: B received packet A0_2 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 13 ===
+[INFO] producer: A0 sent packet A0_13 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_7 from S0_in to S_out
+[INFO] switch: Switch received packet A0_9 from S0_in
+[INFO] consumer: B received packet A0_3 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 14 ===
+[INFO] producer: A0 sent packet A0_14 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_8 from S0_in to S_out
+[INFO] switch: Switch received packet A0_10 from S0_in
+[INFO] consumer: B received packet A0_4 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 15 ===
+[INFO] producer: A0 sent packet A0_15 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_9 from S0_in to S_out
+[INFO] switch: Switch received packet A0_11 from S0_in
+[INFO] consumer: B received packet A0_5 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 16 ===
+[INFO] producer: A0 sent packet A0_16 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_10 from S0_in to S_out
+[INFO] switch: Switch received packet A0_12 from S0_in
+[INFO] consumer: B received packet A0_6 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 17 ===
+[INFO] producer: A0 sent packet A0_17 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_11 from S0_in to S_out
+[INFO] switch: Switch received packet A0_13 from S0_in
+[INFO] consumer: B received packet A0_7 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 18 ===
+[INFO] producer: A0 sent packet A0_18 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_12 from S0_in to S_out
+[INFO] switch: Switch received packet A0_14 from S0_in
+[INFO] consumer: B received packet A0_8 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 19 ===
+[INFO] producer: A0 sent packet A0_19 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_13 from S0_in to S_out
+[INFO] switch: Switch received packet A0_15 from S0_in
+[INFO] consumer: B received packet A0_9 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 20 ===
+[INFO] producer: A0 sent packet A0_20 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_14 from S0_in to S_out
+[INFO] switch: Switch received packet A0_16 from S0_in
+[INFO] consumer: B received packet A0_10 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 21 ===
+[INFO] producer: A0 sent packet A0_21 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_15 from S0_in to S_out
+[INFO] switch: Switch received packet A0_17 from S0_in
+[INFO] consumer: B received packet A0_11 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 22 ===
+[INFO] producer: A0 sent packet A0_22 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_16 from S0_in to S_out
+[INFO] switch: Switch received packet A0_18 from S0_in
+[INFO] consumer: B received packet A0_12 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 23 ===
+[INFO] producer: A0 sent packet A0_23 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_17 from S0_in to S_out
+[INFO] switch: Switch received packet A0_19 from S0_in
+[INFO] consumer: B received packet A0_13 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 24 ===
+[INFO] producer: A0 sent packet A0_24 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_18 from S0_in to S_out
+[INFO] switch: Switch received packet A0_20 from S0_in
+[INFO] consumer: B received packet A0_14 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 25 ===
+[INFO] producer: A0 sent packet A0_25 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_19 from S0_in to S_out
+[INFO] switch: Switch received packet A0_21 from S0_in
+[INFO] consumer: B received packet A0_15 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 26 ===
+[INFO] producer: A0 sent packet A0_26 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_20 from S0_in to S_out
+[INFO] switch: Switch received packet A0_22 from S0_in
+[INFO] consumer: B received packet A0_16 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 27 ===
+[INFO] producer: A0 sent packet A0_27 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_21 from S0_in to S_out
+[INFO] switch: Switch received packet A0_23 from S0_in
+[INFO] consumer: B received packet A0_17 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 28 ===
+[INFO] producer: A0 sent packet A0_28 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_22 from S0_in to S_out
+[INFO] switch: Switch received packet A0_24 from S0_in
+[INFO] consumer: B received packet A0_18 on B_in
+[INFO] simulator: 
+
+[INFO] simulator: === Cycle 29 ===
+[INFO] producer: A0 sent packet A0_29 => curr_credit = 0
+[INFO] switch: Switch forwarded packet A0_23 from S0_in to S_out
+[INFO] switch: Switch received packet A0_25 from S0_in
+[INFO] consumer: B received packet A0_19 on B_in
+[INFO] simulator: 
+

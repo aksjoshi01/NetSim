@@ -31,19 +31,6 @@ class Switch(Node):
                     input port to select the packet to be forwarded.
         @param      cycle - an integer representing current simulation time
         """
-        output_ports = self.get_output_ports()
-        output_port = next(iter(output_ports.values()))
-
-        # Check if packets in the pipeline is ready to be forwarded
-        if self.pipeline:
-            ready_cycle, pkt, input_port_id = self.pipeline[0]
-            if ready_cycle == cycle:
-                self.pipeline.popleft()
-                if self.send_pkt(pkt, output_port.get_port_id(), cycle) == 0:
-                    logger.info(f"Switch forwarded packet {pkt.get_pkt_id()} from {input_port_id} to {output_port.get_port_id()}")
-                else:
-                    logger.error(f"Switch unable to send packet {pkt.get_pkt_id()}")                   
-
         input_ports = list(self.get_input_ports().values())
         num_inputs = len(input_ports)
         if num_inputs == 0:
@@ -60,3 +47,16 @@ class Switch(Node):
                 self.pipeline.append((ready_cycle, pkt, input_port.get_port_id()))
                 self.rr_index = (port_idx + 1) % num_inputs
                 break
+
+        output_ports = self.get_output_ports()
+        output_port = next(iter(output_ports.values()))
+
+        # Check if packets in the pipeline is ready to be forwarded
+        if self.pipeline:
+            ready_cycle, pkt, input_port_id = self.pipeline[0]
+            if ready_cycle == cycle:
+                self.pipeline.popleft()
+                if self.send_pkt(pkt, output_port.get_port_id(), cycle) == 0:
+                    logger.info(f"Switch forwarded packet {pkt.get_pkt_id()} from {input_port_id} to {output_port.get_port_id()}")
+                else:
+                    logger.error(f"Switch unable to send packet {pkt.get_pkt_id()}")                   

@@ -47,21 +47,22 @@ class Stats:
         self.per_cycle_link_utilization[-1].add(link_id)
 
     def dump_summary(self):
-        print(f"\n===== Simulation Summary =====")
-        print(f"Total cycles: {self.total_cycles}")
-        print(f"Total packets sent: {self.total_pkts_sent}")
-        print(f"Total packets received: {self.total_pkts_dlvrd}")
-        print(f"\n--- Per Node ---")
-        for node, stats in self.node_stats.items():
-            print(f"Node {node}: Sent = {stats['pkts_sent']}, Received = {stats['pkts_recvd']}")
+        with open("../outputs/stats.log", "w") as file:
+            file.write(f"===== Simulation Summary =====\n")
+            file.write(f"Total cycles: {self.total_cycles}\n")
+            file.write(f"Total packets sent: {self.total_pkts_sent}\n")
+            file.write(f"Total packets received: {self.total_pkts_dlvrd}\n")
+            file.write(f"\n--- Per Node ---\n")
+            
+            for node, stats in self.node_stats.items():
+                file.write(f"Node {node}: Sent = {stats['pkts_sent']}, Received = {stats['pkts_recvd']}\n")
 
-        print(f"\n--- Per Link ---")
-        for link, stats in self.link_stats.items():
-            utilization = stats["utilized_cycles"] / self.total_cycles if self.total_cycles else 0
-            print(f"Link {link}: Utilization = {utilization:.2%}, Packets Transmitted = {stats['total_pkts_transmitted']}")
+            file.write(f"\n--- Per Link ---\n")
+            for link, stats in self.link_stats.items():
+                utilization = stats["utilized_cycles"] / self.total_cycles
+                file.write(f"Link {link}: Utilization = {utilization:.2%}, Packets Transmitted = {stats['total_pkts_transmitted']}\n")
 
         self.generate_plots()
-
 
     def generate_plots(self):
         from plotter import Plotter
