@@ -74,20 +74,22 @@ class Simulator:
         assert port_id not in self.__input_ports, "Error: multiple input ports have same ID {port_id}"
         self.__input_ports[input_port.get_port_id()] = input_port
 
+    def initialize(self):
+        for node in self.__nodes.values():
+            node.initialize()
+
     def run(self):
         """
         @brief      Runs the simulation for `max_cycles`. In each cycle, it calls 
                     the `advance()` method on all registered links and nodes.
         """
         for cycle in range(self.__max_cycles):
-            self.stats.start_cycle()
             logger.info(f"=== Cycle {cycle} ===")
 
             for link in self.__links.values():
                 link.advance(cycle)
 
             for node in self.__nodes.values():
-                node.stats.log_node_activity(node.get_node_id(), cycle, False)
                 node.advance(cycle)
             logger.info(f"\n")
 
@@ -143,7 +145,6 @@ class Simulator:
             link_id = f"link_{src_node_id}_{output_port_id}_to_{dst_node_id}_{input_port_id}"
             link.set_link_id(link_id)
             link.set_latency(latency)
-            link.set_stats(self.stats)
             link.init_fifos()
 
             output_port = OutputPort()

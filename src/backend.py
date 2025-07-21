@@ -100,4 +100,5 @@ if __name__ == "__main__":
     sim = Simulator(args.cycles)
     sim.build_nodes(parser, user_nodes_dir)
     sim.build_connections(parser)
+    sim.initialize()
     sim.run()

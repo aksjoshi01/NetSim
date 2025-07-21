@@ -19,7 +19,7 @@ class Plotter:
         self.__log = log
         self.__node_id = node_id
     
-    def plot_graph(self, event):
+    def plot_graph(self):
         """
         @brief      Plots the graph based on the data in log
         """
@@ -28,14 +28,14 @@ class Plotter:
 
         plt.figure(figsize = (10, 4))
         plt.bar(cycles, successes, color = 'skyblue', edgecolor = 'black', width = 0.8)
-        plt.title(f"{event} Success per Cycle - {self.__node_id}")
+        plt.title(f"Activity per Cycle - {self.__node_id}")
         plt.xlabel("Cycle")
-        plt.ylabel(f"{event} (1=Yes, 0=No)")
+        plt.ylabel(f"(1=Yes, 0=No)")
         plt.ylim(0, 1.2)
         plt.xticks(cycles)
         plt.grid(axis = 'y', linestyle = '--', alpha = 0.7)
 
-        filename = f"../outputs/{self.__node_id}_{event}_log.png"
+        filename = f"../outputs/{self.__node_id}_log.png"
         plt.tight_layout()
         plt.savefig(filename, dpi=150)
         plt.close()

@@ -19,12 +19,16 @@ class Consumer(Node):
         super().__init__()
         self.rate = 4
 
+    def initialize(self):
+        self.stats.get_counter(f"{self.get_node_id()}_pkts_recvd")
+        self.stats.get_cycle_map(f"{self.get_node_id()}")
+
     def advance(self, cycle):
         """
         @brief      Attempt to receive packets from input ports.
         @param      cycle - an integer representing current simulation time.
         """
-        
+        self.stats.record_cycle(f"{self.get_node_id()}", cycle, False)
         # if cycle % self.rate  != 0:
         #     return
 
@@ -34,3 +38,5 @@ class Consumer(Node):
         pkt = self.recv_pkt(input_port.get_port_id(), cycle)
         if pkt:
             logger.info(f"{self.get_node_id()} received packet {pkt.get_pkt_id()} on {input_port.get_port_id()}")
+            self.stats.incr_counter(f"{self.get_node_id()}_pkts_recvd")
+            self.stats.record_cycle(f"{self.get_node_id()}", cycle, True)

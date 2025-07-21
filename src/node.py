@@ -26,6 +26,10 @@ class Node:
         self.__cycle = -1
         self.stats = None
 
+    @abstractmethod
+    def initialize(self):
+        pass
+
     def set_stats(self, stats):
         self.stats = stats
 
@@ -100,8 +104,6 @@ class Node:
         status = output_port.send_pkt(pkt, current_cycle)
         if status == 0:
             self.set_cycle(current_cycle)
-            self.stats.log_node_activity(self.get_node_id(), current_cycle, True)
-            self.stats.increment_pkt_sent(self.get_node_id())
         return status
 
     def recv_pkt(self, port_id: str, current_cycle: int):
@@ -111,16 +113,12 @@ class Node:
         @param      current_cycle - represents the simulation time.
         @return     pkt on success, None otherwise.
         """
-        self.stats.log_node_activity(self.get_node_id(), current_cycle, False)
-
         input_port = self.__input_ports.get(port_id)
         if input_port is None:
             return None
         
         pkt = input_port.recv_pkt(current_cycle)
         if pkt is not None:
-            self.stats.log_node_activity(self.get_node_id(), current_cycle, True)
-            self.stats.increment_pkt_recvd(self.get_node_id())
             return pkt
         
         return None

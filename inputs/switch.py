@@ -25,17 +25,23 @@ class Switch(Node):
         self.processing_latency = 2
         self.pipeline = deque()
 
+    def initialize(self):
+        self.stats.get_counter(f"{self.get_node_id()}_pkts_forwarded")
+        self.stats.get_cycle_map(f"{self.get_node_id()}")
+
     def advance(self, cycle):
         """
         @brief      This method performs a round-robin scheduling scheme to determine which
                     input port to select the packet to be forwarded.
         @param      cycle - an integer representing current simulation time
         """
+        self.stats.record_cycle(f"{self.get_node_id()}", cycle, False)
+
         input_ports = list(self.get_input_ports().values())
         num_inputs = len(input_ports)
         if num_inputs == 0:
             return
-               
+
         # Round-robin over input ports
         for i in range(num_inputs):
             port_idx = (self.rr_index + i) % num_inputs
@@ -58,5 +64,7 @@ class Switch(Node):
                 self.pipeline.popleft()
                 if self.send_pkt(pkt, output_port.get_port_id(), cycle) == 0:
                     logger.info(f"Switch forwarded packet {pkt.get_pkt_id()} from {input_port_id} to {output_port.get_port_id()}")
+                    self.stats.incr_counter(f"{self.get_node_id()}_pkts_forwarded")
+                    self.stats.record_cycle(f"{self.get_node_id()}", cycle, True)
                 else:
                     logger.error(f"Switch unable to send packet {pkt.get_pkt_id()}")                   
