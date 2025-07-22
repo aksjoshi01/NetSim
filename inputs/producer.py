@@ -57,11 +57,11 @@ class Producer(Node):
 
         if self.send_pkt(packet, output_port.get_port_id(), cycle) < 0:
             logger.warning(f"{self.get_node_id()} unable to send packet {pkt_id}")
-            self.get_stats().incr_counter(f"pkts_failed")
+            self.incr_counter(f"pkts_failed")
         else:
             logger.info(f"{self.get_node_id()} sent packet {pkt_id} => curr_credit = {output_port.get_credit()}")
-            self.get_stats().incr_counter(f"pkts_sent")
-            self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, True)
+            self.incr_counter(f"pkts_sent")
+            self.record_cycle(f"{self.get_node_id()}", cycle, True)
 
     def finalize(self):
         logger.info(f"Node {self.get_node_id()} stats:")

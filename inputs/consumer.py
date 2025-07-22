@@ -29,8 +29,9 @@ class Consumer(Node):
         @param      cycle - an integer representing current simulation time.
         """
         self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, False)
-        # if cycle % self.rate  != 0:
-        #     return
+
+        if cycle % self.rate  != 0:
+            return
 
         input_ports = self.get_input_ports()
         input_port = next(iter(input_ports.values()))
@@ -38,8 +39,8 @@ class Consumer(Node):
         pkt = self.recv_pkt(input_port.get_port_id(), cycle)
         if pkt:
             logger.info(f"{self.get_node_id()} received packet {pkt.get_pkt_id()} on {input_port.get_port_id()}")
-            self.get_stats().incr_counter(f"pkts_recvd")
-            self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, True)
+            self.incr_counter(f"pkts_recvd")
+            self.record_cycle(f"{self.get_node_id()}", cycle, True)
 
     def finalize(self):
         logger.info(f"Node {self.get_node_id()} stats:")

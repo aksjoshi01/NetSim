@@ -182,4 +182,4 @@ class OutputPort(Port):
 
             return status
 
-        return -1
+        return -10

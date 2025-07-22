@@ -33,6 +33,14 @@ class Node:
         assert stats is not None, "Error: stats object cannot be None"
         self.__stats = stats
 
+    # wrapper over incr_counter() in Stats
+    def incr_counter(self, name):
+        self.get_stats().incr_counter(name)
+
+    # wrapper over record_cycle() in Stats
+    def record_cycle(self, name, cycle, val):
+        self.get_stats().record_cycle(name, cycle, val)
+
     def set_node_id(self, node_id: str):
         """
         @brief      Assigns the node_id to the Node object.

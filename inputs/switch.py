@@ -54,8 +54,14 @@ class Switch(Node):
         if num_inputs == 0:
             return
 
+        output_ports = self.get_output_ports()
+        output_port = next(iter(output_ports.values()))
+
         # Round-robin over input ports
         for i in range(num_inputs):
+            if output_port.get_credit() == 0:
+                break
+
             port_idx = (self.get_rr_index() + i) % num_inputs
             input_port = input_ports[port_idx]
             pkt = self.recv_pkt(input_port.get_port_id(), cycle)
@@ -66,20 +72,18 @@ class Switch(Node):
                 self.set_rr_index((port_idx + 1) % num_inputs)
                 break
 
-        output_ports = self.get_output_ports()
-        output_port = next(iter(output_ports.values()))
-
         # Check if packets in the pipeline is ready to be forwarded
         if self.get_pipeline():
             ready_cycle, pkt, input_port_id = self.get_pipeline()[0]
             if ready_cycle == cycle:
-                self.get_pipeline().popleft()
-                if self.send_pkt(pkt, output_port.get_port_id(), cycle) == 0:
+                val = self.send_pkt(pkt, output_port.get_port_id(), cycle) 
+                if val == 0:
                     logger.info(f"Switch forwarded packet {pkt.get_pkt_id()} from {input_port_id} to {output_port.get_port_id()}")
-                    self.get_stats().incr_counter(f"pkts_forwarded")
-                    self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, True)
+                    self.get_pipeline().popleft()
+                    self.incr_counter(f"pkts_forwarded")
+                    self.record_cycle(f"{self.get_node_id()}", cycle, True)
                 else:
-                    logger.error(f"Switch unable to send packet {pkt.get_pkt_id()}")
+                    logger.error(f"Switch unable to send packet {pkt.get_pkt_id()} - error code: {val}")
 
     def finalize(self):
         logger.info(f"Node {self.get_node_id()} stats:")
