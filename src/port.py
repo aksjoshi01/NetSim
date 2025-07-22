@@ -33,6 +33,13 @@ class Port:
         assert isinstance(port_id, str), "Error: port_id must be a string"
         self.__port_id = port_id
 
+    def get_port_id(self):
+        """
+        @brief      Returns the port_id of the Port object.
+        @return     port_id - a string representing ID of the port.
+        """
+        return self.__port_id
+
     def set_connected_link(self, connected_link):
         """
         @brief      Sets the link that connects to the port.
@@ -40,6 +47,13 @@ class Port:
         """
         assert connected_link is not None, "Error: link cannot be None to connect to port"
         self.__connected_link = connected_link
+
+    def get_connected_link(self):
+        """
+        @brief      Returns the Link object the connects the port.
+        @return     connected_link - the Link object.
+        """
+        return self.__connected_link
 
     def set_cycle(self, cycle):
         """
@@ -54,20 +68,6 @@ class Port:
         @return     cycle - an integer representing most recent time a pkt was sent.
         """
         return self.__cycle
-
-    def get_port_id(self):
-        """
-        @brief      Returns the port_id of the Port object.
-        @return     port_id - a string representing ID of the port.
-        """
-        return self.__port_id
-
-    def get_connected_link(self):
-        """
-        @brief      Returns the Link object the connects the port.
-        @return     connected_link - the Link object.
-        """
-        return self.__connected_link
 
 
 class InputPort(Port):
@@ -91,19 +91,27 @@ class InputPort(Port):
         assert fifo_size > 0, "Error: fifo_size should be greater than zero"
         self.__fifo_size = fifo_size
 
+    def get_fifo_size(self):
+        return self.__fifo_size
+
+    def get_fifo(self):
+        return self.__fifo
+
     def recv_pkt(self, current_cycle: int):
         """
         @brief      Receive the packet from its fifo, if present.
         @param      current_cycle - the current simulation time.
         @return     the received pkt on success, None otherwise.
         """
-        if len(self.__fifo) > 0:
+        fifo = self.get_fifo()
+        
+        if len(fifo) > 0:
             connected_link = self.get_connected_link()
             credit_pkt = CreditPacket()
             status = connected_link.send_credit(credit_pkt, current_cycle)
             if status < 0:
                 return None
-            return self.__fifo.popleft()
+            return fifo.popleft()
         
         return None
 
@@ -112,8 +120,10 @@ class InputPort(Port):
         @brief      Pushes the packet to its fifo.
         @param      pkt - the packet to be pushed.
         """
-        if len(self.__fifo) < self.__fifo_size:
-            self.__fifo.append(pkt)
+        fifo = self.get_fifo()
+
+        if len(fifo) < self.get_fifo_size():
+            fifo.append(pkt)
 
 
 class OutputPort(Port):
@@ -144,7 +154,7 @@ class OutputPort(Port):
         @brief      Increments the credit by one.
         """
         self.__credit += 1
-        logger.debug(f"[^] Port '{self.get_port_id()}' received credit")
+        logger.debug(f"Port '{self.get_port_id()}' received credit")
 
     def decrement_credit(self):
         """
@@ -163,7 +173,7 @@ class OutputPort(Port):
         assert isinstance(pkt, Packet), "Error: pkt should be of class type Packet"
         assert self.get_cycle() < current_cycle, "Error: cannot send more than 1 pkt in a cycle"
 
-        if self.__credit > 0:
+        if self.get_credit() > 0:
             connected_link = self.get_connected_link()
             status = connected_link.send_pkt(pkt, current_cycle)
             if status == 0:

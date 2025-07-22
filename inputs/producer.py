@@ -21,9 +21,9 @@ class Producer(Node):
         super().__init__()
 
     def initialize(self):
-        self.stats.get_counter(f"{self.get_node_id()}_pkts_sent")
-        self.stats.get_counter(f"{self.get_node_id()}_pkts_failed")
-        self.stats.get_cycle_map(f"{self.get_node_id()}")
+        self.get_stats().register_counter(f"pkts_sent")
+        self.get_stats().register_counter(f"pkts_failed")
+        self.get_stats().register_cycle_map(f"{self.get_node_id()}")
 
     def advance(self, cycle):
         """
@@ -32,7 +32,7 @@ class Producer(Node):
         """
         # if self.get_node_id() == "A1" or self.get_node_id() == "A2":
             # return
-        self.stats.record_cycle(f"{self.get_node_id()}", cycle, False)
+        self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, False)
 
         if self.get_node_id() == "A0":
             stream_rate = 1
@@ -57,8 +57,13 @@ class Producer(Node):
 
         if self.send_pkt(packet, output_port.get_port_id(), cycle) < 0:
             logger.warning(f"{self.get_node_id()} unable to send packet {pkt_id}")
-            self.stats.incr_counter(f"{self.get_node_id()}_pkts_failed")
+            self.get_stats().incr_counter(f"pkts_failed")
         else:
             logger.info(f"{self.get_node_id()} sent packet {pkt_id} => curr_credit = {output_port.get_credit()}")
-            self.stats.incr_counter(f"{self.get_node_id()}_pkts_sent")
-            self.stats.record_cycle(f"{self.get_node_id()}", cycle, True)
+            self.get_stats().incr_counter(f"pkts_sent")
+            self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, True)
+
+    def finalize(self):
+        logger.info(f"Node {self.get_node_id()} stats:")
+        self.get_stats().dump_summary()
+        logger.info(f"\n")

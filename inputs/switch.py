@@ -1,6 +1,6 @@
 """
 @file       switch.py
-@brief      A simple switch node with 3 input ports and 1 output port that performs round-robin arbitration.
+@brief      A switch node with round-robin arbitration.
 """
 
 from collections import deque
@@ -21,13 +21,25 @@ class Switch(Node):
         @brief      A constructor for the Switch class.
         """
         super().__init__()
-        self.rr_index = 0
-        self.processing_latency = 2
-        self.pipeline = deque()
+        self.__rr_index = 0
+        self.__processing_latency = 2
+        self.__pipeline = deque()
+    
+    def get_rr_index(self):
+        return self.__rr_index
+
+    def set_rr_index(self, rr_index):
+        self.__rr_index = rr_index
+
+    def get_pipeline(self):
+        return self.__pipeline
+
+    def get_processing_latency(self):
+        return self.__processing_latency
 
     def initialize(self):
-        self.stats.get_counter(f"{self.get_node_id()}_pkts_forwarded")
-        self.stats.get_cycle_map(f"{self.get_node_id()}")
+        self.get_stats().register_counter(f"pkts_forwarded")
+        self.get_stats().register_cycle_map(f"{self.get_node_id()}")
 
     def advance(self, cycle):
         """
@@ -35,7 +47,7 @@ class Switch(Node):
                     input port to select the packet to be forwarded.
         @param      cycle - an integer representing current simulation time
         """
-        self.stats.record_cycle(f"{self.get_node_id()}", cycle, False)
+        self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, False)
 
         input_ports = list(self.get_input_ports().values())
         num_inputs = len(input_ports)
@@ -44,27 +56,32 @@ class Switch(Node):
 
         # Round-robin over input ports
         for i in range(num_inputs):
-            port_idx = (self.rr_index + i) % num_inputs
+            port_idx = (self.get_rr_index() + i) % num_inputs
             input_port = input_ports[port_idx]
             pkt = self.recv_pkt(input_port.get_port_id(), cycle)
             if pkt:
                 logger.info(f"Switch received packet {pkt.get_pkt_id()} from {input_port.get_port_id()}")
-                ready_cycle = cycle + self.processing_latency
-                self.pipeline.append((ready_cycle, pkt, input_port.get_port_id()))
-                self.rr_index = (port_idx + 1) % num_inputs
+                ready_cycle = cycle + self.get_processing_latency()
+                self.get_pipeline().append((ready_cycle, pkt, input_port.get_port_id()))
+                self.set_rr_index((port_idx + 1) % num_inputs)
                 break
 
         output_ports = self.get_output_ports()
         output_port = next(iter(output_ports.values()))
 
         # Check if packets in the pipeline is ready to be forwarded
-        if self.pipeline:
-            ready_cycle, pkt, input_port_id = self.pipeline[0]
+        if self.get_pipeline():
+            ready_cycle, pkt, input_port_id = self.get_pipeline()[0]
             if ready_cycle == cycle:
-                self.pipeline.popleft()
+                self.get_pipeline().popleft()
                 if self.send_pkt(pkt, output_port.get_port_id(), cycle) == 0:
                     logger.info(f"Switch forwarded packet {pkt.get_pkt_id()} from {input_port_id} to {output_port.get_port_id()}")
-                    self.stats.incr_counter(f"{self.get_node_id()}_pkts_forwarded")
-                    self.stats.record_cycle(f"{self.get_node_id()}", cycle, True)
+                    self.get_stats().incr_counter(f"pkts_forwarded")
+                    self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, True)
                 else:
-                    logger.error(f"Switch unable to send packet {pkt.get_pkt_id()}")                   
+                    logger.error(f"Switch unable to send packet {pkt.get_pkt_id()}")
+
+    def finalize(self):
+        logger.info(f"Node {self.get_node_id()} stats:")
+        self.get_stats().dump_summary()
+        logger.info(f"\n")

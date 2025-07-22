@@ -32,7 +32,6 @@ class Simulator:
         self.__links: Dict[str, Link] = {}
         self.__output_ports: Dict[str, OutputPort] = {}
         self.__input_ports: Dict[str, InputPort] = {}
-        self.stats = Stats()
 
     def add_node(self, node: 'Node'):
         """
@@ -75,6 +74,7 @@ class Simulator:
         self.__input_ports[input_port.get_port_id()] = input_port
 
     def initialize(self):
+        logger.info("===== Simulation =====")
         for node in self.__nodes.values():
             node.initialize()
 
@@ -83,6 +83,8 @@ class Simulator:
         @brief      Runs the simulation for `max_cycles`. In each cycle, it calls 
                     the `advance()` method on all registered links and nodes.
         """
+        self.initialize()
+
         for cycle in range(self.__max_cycles):
             logger.info(f"=== Cycle {cycle} ===")
 
@@ -93,8 +95,13 @@ class Simulator:
                 node.advance(cycle)
             logger.info(f"\n")
 
-        self.stats.dump_summary()
+        self.finalize()
         print(f"Simulation completed. \nLog files, statistics and plots can be found in ../outputs/ directory")
+
+    def finalize(self):
+        logger.info(f"===== Statistics =====")
+        for node in self.__nodes.values():
+            node.finalize()
 
     def build_nodes(self, parser, user_nodes_dir):
         """
@@ -107,7 +114,7 @@ class Simulator:
         if user_nodes_dir not in os.sys.path:
             os.sys.path.append(user_nodes_dir)
         
-        for row in parser.node_specs:
+        for row in parser.get_node_specs():
             module_name = row["module"]
             class_name = row["class"]
             node_id = row["node_id"]
@@ -117,7 +124,7 @@ class Simulator:
             
             node = NodeClass()
             node.set_node_id(node_id)
-            node.set_stats(self.stats)
+            node.set_stats(Stats())
             self.add_node(node)
 
     def build_connections(self, parser):
@@ -125,7 +132,7 @@ class Simulator:
         @brief      Instantiates the output ports, input ports and links and connects them.
         @param      parser - parsed data that contains the topology of the network.
         """
-        for row in parser.connection_specs:
+        for row in parser.get_connection_specs():
             src_node_id = row["src_node"]
             dst_node_id = row["dst_node"]
             output_port_id = row["src_port"]

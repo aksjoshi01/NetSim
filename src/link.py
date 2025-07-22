@@ -80,6 +80,18 @@ class Link:
         """
         return self.__latency
 
+    def get_input_port(self):
+        return self.__input_port
+
+    def get_output_port(self):
+        return self.__output_port
+
+    def get_pipeline(self):
+        return self.__pipeline
+
+    def get_credit_pipeline(self):
+        return self.__credit_pipeline
+
     def send_pkt(self, pkt: 'Packet', current_cycle: int):
         """
         @brief      Appends the packet to its pipeline if there is space.
@@ -90,9 +102,10 @@ class Link:
         assert pkt is not None, "Error: packet cannot be None"
         assert isinstance(pkt, Packet), "Error: pkt should be of class type Packet"
 
-        if len(self.__pipeline) < self.__latency:
+        pipeline = self.get_pipeline()
+        if len(pipeline) < self.get_latency():
             data = [pkt, current_cycle]
-            self.__pipeline.append(data)
+            pipeline.append(data)
             return 0
 
         return -1
@@ -104,9 +117,10 @@ class Link:
         @param      current_cycle - integer value representing the simulation time.
         @return     0 on success, -1 otherwise.
         """
-        if len(self.__credit_pipeline) < self.__latency:
+        credit_pipeline = self.get_credit_pipeline()
+        if len(credit_pipeline) < self.get_latency():
             data = [credit_pkt, current_cycle]
-            self.__credit_pipeline.append(data)
+            credit_pipeline.append(data)
             return 0
 
         return -1
@@ -116,16 +130,20 @@ class Link:
         @brief      Advances the packets in the pipeline.
         @param      current_cycle - integer value representing the simulation time.
         """
+        latency = self.get_latency()
+        pipeline = self.get_pipeline()
+        credit_pipeline = self.get_credit_pipeline()
+
         # Advance the packets
-        if len(self.__pipeline) > 0:
-            pkt = self.__pipeline[0]
-            if pkt[1] + self.__latency == current_cycle:
-                self.__pipeline.popleft()
-                self.__input_port.recv_from_link(pkt[0])
+        if len(pipeline) > 0:
+            pkt = pipeline[0]
+            if pkt[1] + latency == current_cycle:
+                pipeline.popleft()
+                self.get_input_port().recv_from_link(pkt[0])
 
         # Advance the credits
-        if len(self.__credit_pipeline) > 0:
-            credit_pkt = self.__credit_pipeline[0]
-            if credit_pkt[1] + self.__latency == current_cycle:
-                self.__credit_pipeline.popleft()
-                self.__output_port.increment_credit()
+        if len(credit_pipeline) > 0:
+            credit_pkt = credit_pipeline[0]
+            if credit_pkt[1] + latency == current_cycle:
+                credit_pipeline.popleft()
+                self.get_output_port().increment_credit()

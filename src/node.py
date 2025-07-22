@@ -24,14 +24,14 @@ class Node:
         self.__input_ports: Dict[str, 'InputPort'] = {}
         self.__output_ports: Dict[str, 'OutputPort'] = {}
         self.__cycle = -1
-        self.stats = None
+        self.__stats = None
 
-    @abstractmethod
-    def initialize(self):
-        pass
+    def get_stats(self):
+        return self.__stats
 
     def set_stats(self, stats):
-        self.stats = stats
+        assert stats is not None, "Error: stats object cannot be None"
+        self.__stats = stats
 
     def set_node_id(self, node_id: str):
         """
@@ -98,7 +98,7 @@ class Node:
         assert isinstance(pkt, Packet), "Error; pkt should be of class type Packet"
         assert self.get_cycle() < current_cycle, "Error: cannot send more than 1 pkt in a cycle"
 
-        output_port = self.__output_ports.get(port_id)
+        output_port = self.get_output_ports().get(port_id)
         assert output_port is not None, "Error: found None output port"
 
         status = output_port.send_pkt(pkt, current_cycle)
@@ -113,7 +113,7 @@ class Node:
         @param      current_cycle - represents the simulation time.
         @return     pkt on success, None otherwise.
         """
-        input_port = self.__input_ports.get(port_id)
+        input_port = self.get_input_ports().get(port_id)
         if input_port is None:
             return None
         
@@ -125,4 +125,12 @@ class Node:
         
     @abstractmethod
     def advance(self, current_cycle: int):
+        pass
+
+    @abstractmethod
+    def initialize(self):
+        pass
+
+    @abstractmethod
+    def finalize(self):
         pass
