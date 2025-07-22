@@ -16,22 +16,18 @@ class Port:
     """
     @class      Port
     """
-    def __init__(self):
+    def __init__(self, port_id, link):
         """
         @brief      A constructor for the Port class.
         """
-        self.__port_id = None
-        self.__connected_link = None
-        self.__cycle = -1
-
-    def set_port_id(self, port_id):
-        """
-        @brief      Assigns ID to the Port object.
-        @param      port_id - string representing ID of the port.
-        """
         assert port_id is not None, "Error: port_id cannot be None"
         assert isinstance(port_id, str), "Error: port_id must be a string"
+        assert link is not None, "Error: link cannot be None to connect to port"
+        assert isinstance(link, Link), "Error: link should be of type class Link"
+
         self.__port_id = port_id
+        self.__connected_link = link
+        self.__cycle = -1
 
     def get_port_id(self):
         """
@@ -39,14 +35,6 @@ class Port:
         @return     port_id - a string representing ID of the port.
         """
         return self.__port_id
-
-    def set_connected_link(self, connected_link):
-        """
-        @brief      Sets the link that connects to the port.
-        @param      connected_link - the Link object the connects to the port.
-        """
-        assert connected_link is not None, "Error: link cannot be None to connect to port"
-        self.__connected_link = connected_link
 
     def get_connected_link(self):
         """
@@ -74,22 +62,15 @@ class InputPort(Port):
     """
     @class      InputPort
     """
-    def __init__(self):
+    def __init__(self, port_id, fifo_size, link):
         """
         @brief      A constructor for the InputPort class.
         """
-        super().__init__()
-        self.__fifo_size = None
-        self.__fifo: deque[Packet] = deque()
-
-    def set_fifo_size(self, fifo_size):
-        """
-        @brief      Assigns the max size of the fifo.
-        @param      fifo_size - integer value greater than zero.
-        """
         assert isinstance(fifo_size, int), "Error: fifo_size should be an integer"
         assert fifo_size > 0, "Error: fifo_size should be greater than zero"
+        super().__init__(port_id, link)
         self.__fifo_size = fifo_size
+        self.__fifo: deque[Packet] = deque()
 
     def get_fifo_size(self):
         return self.__fifo_size
@@ -130,20 +111,13 @@ class OutputPort(Port):
     """
     @class      OutputPort
     """
-    def __init__(self):
+    def __init__(self, port_id, credit, link):
         """
         @brief      A constructor for the OutputPort class.
         """
-        super().__init__()
-        self.__credit = None
-
-    def set_credit(self, credit):
-        """
-        @brief      Sets the initial credits value.
-        @param      credit - an integer value greater than zero.
-        """
         assert isinstance(credit, int), "Error: credit should be an integer"
         assert credit > 0, "Error: initial credit should be greater than zero"
+        super().__init__(port_id, link)
         self.__credit = credit
 
     def get_credit(self):

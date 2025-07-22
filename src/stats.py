@@ -5,7 +5,7 @@
 """
 
 from collections import defaultdict
-from plotter import Plotter
+import matplotlib.pyplot as plt
 import logging
 logger = logging.getLogger(__name__)
 
@@ -20,9 +20,9 @@ class Stats:
         self.__int_counters[name]
 
     # increment the `name` counter - throw an error if no such name exists
-    def incr_counter(self, name):
+    def incr_counter(self, name, amount):
         assert name in self.__int_counters, "Error: counter name is invalid"
-        self.__int_counters[name] += 1
+        self.__int_counters[name] += amount
 
     # get the value of the `name` counter - throw an error if name does not exist
     def get_counter(self, name):
@@ -41,6 +41,24 @@ class Stats:
         assert name in self.__cycle_map, "Error: cycle_map name in invalid"
         return self.__cycle_map[name]
 
+    def plot_graph(self, cycle_map, name):
+        cycles = sorted(cycle_map.keys())
+        successes = [int(cycle_map[cycle]) for cycle in cycles]
+
+        plt.figure(figsize = (10, 4))
+        plt.bar(cycles, successes, color = 'skyblue', edgecolor = 'black', width = 0.8)
+        plt.title(f"Activity per Cycle - {name}")
+        plt.xlabel("Cycle")
+        plt.ylabel(f"(1=Yes, 0=No)")
+        plt.ylim(0, 1.2)
+        plt.xticks(cycles)
+        plt.grid(axis = 'y', linestyle = '--', alpha = 0.7)
+
+        filename = f"../outputs/{name}_log.png"
+        plt.tight_layout()
+        plt.savefig(filename, dpi=150)
+        plt.close()
+
     def dump_summary(self):
         for name, val in self.__int_counters.items():
             logger.info(f"{name}: {val}")
@@ -49,5 +67,5 @@ class Stats:
 
     def generate_plots(self):
         for stat_name, cycle_count in self.__cycle_map.items():
-            plotter = Plotter(cycle_count, stat_name)
-            plotter.plot_graph()
+            self.plot_graph(cycle_count, stat_name)
+

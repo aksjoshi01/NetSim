@@ -16,7 +16,6 @@ from packet import Packet
 from port import OutputPort, InputPort
 from simulator import Simulator
 from parser import Parser
-from plotter import Plotter
 
 def validate_directory(path, name):
     if not os.path.exists(path):

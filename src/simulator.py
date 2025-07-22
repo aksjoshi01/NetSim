@@ -30,8 +30,6 @@ class Simulator:
         self.__max_cycles = max_cycles
         self.__nodes: Dict[str, Node] = {}
         self.__links: Dict[str, Link] = {}
-        self.__output_ports: Dict[str, OutputPort] = {}
-        self.__input_ports: Dict[str, InputPort] = {}
 
     def add_node(self, node: 'Node'):
         """
@@ -43,6 +41,9 @@ class Simulator:
         assert node_id not in self.__nodes, f"Error: multiple nodes have same ID {node_id}"
         self.__nodes[node_id] = node
 
+    def get_node(self, node_id):
+        return self.__nodes[node_id]
+
     def add_link(self, link: 'Link'):
         """
         @brief      Adds the link object to its dictionary.
@@ -52,26 +53,6 @@ class Simulator:
         link_id = link.get_link_id()
         assert link_id not in self.__links, f"Error: multiple links have same ID {link_id}"
         self.__links[link_id] = link
-
-    def add_output_port(self, output_port: 'OutputPort'):
-        """
-        @brief      Adds the output port object to its dictionary.
-        @param      output_port - the OutputPort object to be added.
-        """
-        assert output_port is not None, "Error: OutputPort cannot be None"
-        port_id = output_port.get_port_id()
-        assert port_id not in self.__output_ports, f"Error: multiple output ports have same ID {port_id}"
-        self.__output_ports[port_id] = output_port
-
-    def add_input_port(self, input_port: 'InputPort'):
-        """
-        @brief      Adds the input port object to its dictionary.
-        @param      input_port - the InputPort object to be added.
-        """
-        assert input_port is not None, "Error: InputPort cannot be None"
-        port_id = input_port.get_port_id()
-        assert port_id not in self.__input_ports, "Error: multiple input ports have same ID {port_id}"
-        self.__input_ports[input_port.get_port_id()] = input_port
 
     def initialize(self):
         logger.info("===== Simulation =====")
@@ -124,7 +105,6 @@ class Simulator:
             
             node = NodeClass()
             node.set_node_id(node_id)
-            node.set_stats(Stats())
             self.add_node(node)
 
     def build_connections(self, parser):
@@ -145,24 +125,14 @@ class Simulator:
             except ValueError:
                 raise ValueError(f"Invalid integer")
             
-            src_node = self.__nodes[src_node_id]
-            dst_node = self.__nodes[dst_node_id]
+            src_node = self.get_node(src_node_id)
+            dst_node = self.get_node(dst_node_id)
 
-            link = Link()
             link_id = f"link_{src_node_id}_{output_port_id}_to_{dst_node_id}_{input_port_id}"
-            link.set_link_id(link_id)
-            link.set_latency(latency)
-            link.init_fifos()
+            link = Link(link_id, latency)
 
-            output_port = OutputPort()
-            output_port.set_port_id(output_port_id)
-            output_port.set_credit(credit)
-            output_port.set_connected_link(link)
-
-            input_port = InputPort()
-            input_port.set_port_id(input_port_id)
-            input_port.set_fifo_size(fifo_size)
-            input_port.set_connected_link(link)
+            output_port = OutputPort(output_port_id, credit, link)
+            input_port = InputPort(input_port_id, fifo_size, link)
 
             link.set_output_port(output_port)
             link.set_input_port(input_port)
@@ -170,6 +140,4 @@ class Simulator:
             src_node.add_output_port(output_port)
             dst_node.add_input_port(input_port)
 
-            self.add_output_port(output_port)
-            self.add_input_port(input_port)
             self.add_link(link)

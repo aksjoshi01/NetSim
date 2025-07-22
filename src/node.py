@@ -24,18 +24,14 @@ class Node:
         self.__input_ports: Dict[str, 'InputPort'] = {}
         self.__output_ports: Dict[str, 'OutputPort'] = {}
         self.__cycle = -1
-        self.__stats = None
+        self.__stats = Stats()
 
     def get_stats(self):
         return self.__stats
 
-    def set_stats(self, stats):
-        assert stats is not None, "Error: stats object cannot be None"
-        self.__stats = stats
-
     # wrapper over incr_counter() in Stats
-    def incr_counter(self, name):
-        self.get_stats().incr_counter(name)
+    def incr_counter(self, name, amount):
+        self.get_stats().incr_counter(name, amount)
 
     # wrapper over record_cycle() in Stats
     def record_cycle(self, name, cycle, val):
@@ -76,6 +72,7 @@ class Node:
         @param      input_port - The input port object to be added.
         @return     0 if operation is successful, -1 otherwise.
         """
+        assert input_port is not None, "Error: input_port cannot be None"
         assert input_port.get_port_id() not in self.__input_ports, "Error: cannot add input port with duplicate ID"
         self.__input_ports[input_port.get_port_id()] = input_port
 
@@ -85,6 +82,7 @@ class Node:
         @param      output_port - The output port object to be added.
         @return     0 if operation is successful, -1 otherwise.
         """
+        assert output_port is not None, "Error: output_port cannot be None"
         assert output_port.get_port_id() not in self.__output_ports, "Error: cannot add output port with duplicate ID"
         self.__output_ports[output_port.get_port_id()] = output_port
 
@@ -93,6 +91,14 @@ class Node:
 
     def get_output_ports(self):
         return self.__output_ports
+
+    def get_input_port(self, port_id):
+        assert port_id in self.__input_ports, "Error: invalid port_id given"
+        return self.__input_ports[port_id]
+
+    def get_output_port(self, port_id):
+        assert port_id in self.__output_ports, "Error: invalid port_id given"
+        return self.__output_ports[port_id]
 
     def send_pkt(self, pkt: 'Packet', port_id: str, current_cycle: int):
         """
@@ -106,7 +112,7 @@ class Node:
         assert isinstance(pkt, Packet), "Error; pkt should be of class type Packet"
         assert self.get_cycle() < current_cycle, "Error: cannot send more than 1 pkt in a cycle"
 
-        output_port = self.get_output_ports().get(port_id)
+        output_port = self.get_output_port(port_id)
         assert output_port is not None, "Error: found None output port"
 
         status = output_port.send_pkt(pkt, current_cycle)
@@ -121,7 +127,7 @@ class Node:
         @param      current_cycle - represents the simulation time.
         @return     pkt on success, None otherwise.
         """
-        input_port = self.get_input_ports().get(port_id)
+        input_port = self.get_input_port(port_id)
         if input_port is None:
             return None
         

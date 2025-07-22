@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 
 from node import Node
 from packet import Packet
-from plotter import Plotter
 
 class Producer(Node):
     """
@@ -30,21 +29,22 @@ class Producer(Node):
         @brief      Generates packets every cycle and attempts to send it.
         @param      cycle - an integer representing current simulation time.
         """
-        # if self.get_node_id() == "A1" or self.get_node_id() == "A2":
-            # return
         self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, False)
 
-        if self.get_node_id() == "A0":
-            stream_rate = 1
-        elif self.get_node_id() == "A1":
-            stream_rate = 2
-        elif self.get_node_id() == "A2":
-            stream_rate = 4
-        else:
+        if self.get_node_id() == "A1" or self.get_node_id() == "A2":
             return
 
-        if cycle % stream_rate != 0:
-            return
+        # if self.get_node_id() == "A0":
+        #     stream_rate = 1
+        # elif self.get_node_id() == "A1":
+        #     stream_rate = 2
+        # elif self.get_node_id() == "A2":
+        #     stream_rate = 4
+        # else:
+        #     return
+
+        # if cycle % stream_rate != 0:
+        #     return
 
         output_ports = self.get_output_ports()
         if not output_ports:
@@ -57,10 +57,10 @@ class Producer(Node):
 
         if self.send_pkt(packet, output_port.get_port_id(), cycle) < 0:
             logger.warning(f"{self.get_node_id()} unable to send packet {pkt_id}")
-            self.incr_counter(f"pkts_failed")
+            self.incr_counter(f"pkts_failed", 1)
         else:
             logger.info(f"{self.get_node_id()} sent packet {pkt_id} => curr_credit = {output_port.get_credit()}")
-            self.incr_counter(f"pkts_sent")
+            self.incr_counter(f"pkts_sent", 1)
             self.record_cycle(f"{self.get_node_id()}", cycle, True)
 
     def finalize(self):

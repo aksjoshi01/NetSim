@@ -13,35 +13,22 @@ class Link:
     """
     @class      Link
     """
-    def __init__(self):
+    def __init__(self, link_id, latency):
         """
         @brief      A constructor for the Link class that initialises the attributes
                     to None.
         """
-        self.__link_id = None
-        self.__output_port = None
-        self.__input_port = None
-        self.__latency = None
-        self.__pipeline = None
-        self.__credit_pipeline = None
-        self.__cycle = -1
-
-    def set_link_id(self, link_id):
-        """
-        @brief      Assigns link_id to the Link object.
-        @param      link_id - unique id of the Link object.
-        """
         assert isinstance(link_id, str), "Error: link_id should be a string"
-        self.__link_id = link_id
-
-    def set_latency(self, latency):
-        """
-        @brief      Sets the latency value, if and only if it is a positive integer.
-        @param      latency - an integer value representing the link latency.
-        """
         assert isinstance(latency, int), "Error: latency should be a positive integer"
         assert latency > 0, "Error: latency should be greater than zero"
+
+        self.__link_id = link_id
         self.__latency = latency
+        self.__output_port = None
+        self.__input_port = None
+        self.__pipeline = deque(maxlen = latency)
+        self.__credit_pipeline = deque(maxlen = latency)
+        self.__cycle = -1
 
     def set_output_port(self, output_port: 'OutputPort'):
         """
@@ -59,13 +46,6 @@ class Link:
         assert input_port is not None, "Error: input port should not be None"
         self.__input_port = input_port
     
-    def init_fifos(self):
-        """
-        @brief      Initialises the pipelines needed for carrying packets.
-        """
-        self.__pipeline = deque(maxlen = self.__latency)
-        self.__credit_pipeline = deque(maxlen = self.__latency)
-
     def get_link_id(self):
         """
         @brief      Returns the link_id of the Link.

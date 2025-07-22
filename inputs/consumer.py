@@ -6,7 +6,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 from node import Node
-from plotter import Plotter
 
 class Consumer(Node):
     """
@@ -39,7 +38,7 @@ class Consumer(Node):
         pkt = self.recv_pkt(input_port.get_port_id(), cycle)
         if pkt:
             logger.info(f"{self.get_node_id()} received packet {pkt.get_pkt_id()} on {input_port.get_port_id()}")
-            self.incr_counter(f"pkts_recvd")
+            self.incr_counter(f"pkts_recvd", 1)
             self.record_cycle(f"{self.get_node_id()}", cycle, True)
 
     def finalize(self):

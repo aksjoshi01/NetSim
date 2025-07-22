@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 from node import Node
 from packet import Packet
 from port import InputPort, OutputPort
-from plotter import Plotter
 
 class Switch(Node):
     """
@@ -80,7 +79,7 @@ class Switch(Node):
                 if val == 0:
                     logger.info(f"Switch forwarded packet {pkt.get_pkt_id()} from {input_port_id} to {output_port.get_port_id()}")
                     self.get_pipeline().popleft()
-                    self.incr_counter(f"pkts_forwarded")
+                    self.incr_counter(f"pkts_forwarded", 1)
                     self.record_cycle(f"{self.get_node_id()}", cycle, True)
                 else:
                     logger.error(f"Switch unable to send packet {pkt.get_pkt_id()} - error code: {val}")
