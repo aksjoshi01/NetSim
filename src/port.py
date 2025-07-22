@@ -89,7 +89,7 @@ class InputPort(Port):
         if len(fifo) > 0:
             connected_link = self.get_connected_link()
             credit_pkt = CreditPacket()
-            status = connected_link.send_credit(credit_pkt, current_cycle)
+            status = connected_link.push_pkt(credit_pkt, current_cycle, "credit")
             if status < 0:
                 return None
             return fifo.popleft()
@@ -149,7 +149,7 @@ class OutputPort(Port):
 
         if self.get_credit() > 0:
             connected_link = self.get_connected_link()
-            status = connected_link.send_pkt(pkt, current_cycle)
+            status = connected_link.push_pkt(pkt, current_cycle, "data")
             if status == 0:
                 self.decrement_credit()
                 self.set_cycle(current_cycle)

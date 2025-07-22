@@ -72,38 +72,18 @@ class Link:
     def get_credit_pipeline(self):
         return self.__credit_pipeline
 
-    def send_pkt(self, pkt: 'Packet', current_cycle: int):
-        """
-        @brief      Appends the packet to its pipeline if there is space.
-        @param      pkt - Packet object to be sent.
-        @param      current_cycle - integer value representing the simulation time.
-        @return     0 on success, -1 otherwise.
-        """
-        assert pkt is not None, "Error: packet cannot be None"
-        assert isinstance(pkt, Packet), "Error: pkt should be of class type Packet"
+    def push_pkt(self, item, current_cycle, pipeline_type: str):
+        assert item is not None, "Error: item cannot be None"
+        assert pipeline_type in ('data', 'credit'), "Error: pipeline_type must be 'data' or 'credit'"
 
-        pipeline = self.get_pipeline()
+        pipeline = self.get_pipeline() if pipeline_type == "data" else self.get_credit_pipeline()
+
         if len(pipeline) < self.get_latency():
-            data = [pkt, current_cycle]
-            pipeline.append(data)
+            pipeline.append([item, current_cycle])
             return 0
 
         return -1
 
-    def send_credit(self, credit_pkt: 'CreditPacket', current_cycle: int):
-        """
-        @brief      Appends the credit packet to its pipeline if there is space.
-        @param      credit_pkt - CreditPacket to be sent.
-        @param      current_cycle - integer value representing the simulation time.
-        @return     0 on success, -1 otherwise.
-        """
-        credit_pipeline = self.get_credit_pipeline()
-        if len(credit_pipeline) < self.get_latency():
-            data = [credit_pkt, current_cycle]
-            credit_pipeline.append(data)
-            return 0
-
-        return -1
 
     def advance(self, current_cycle: int):
         """
