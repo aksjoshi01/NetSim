@@ -12,6 +12,9 @@ from port import OutputPort, InputPort
 from packet import Packet
 from stats import Stats
 
+import logging
+logger = logging.getLogger(__name__)
+
 class Node:
     """
     @class      Node
@@ -86,12 +89,6 @@ class Node:
         assert output_port.get_port_id() not in self.__output_ports, "Error: cannot add output port with duplicate ID"
         self.__output_ports[output_port.get_port_id()] = output_port
 
-    def get_input_ports(self):
-        return self.__input_ports
-
-    def get_output_ports(self):
-        return self.__output_ports
-
     def get_input_port(self, port_id):
         assert port_id in self.__input_ports, "Error: invalid port_id given"
         return self.__input_ports[port_id]
@@ -142,9 +139,9 @@ class Node:
         pass
 
     @abstractmethod
-    def initialize(self):
+    def setup(self):
         pass
 
     @abstractmethod
-    def finalize(self):
+    def teardown(self):
         pass

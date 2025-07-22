@@ -13,6 +13,18 @@ class Stats:
     def __init__(self):
         self.__int_counters = defaultdict(int)
         self.__cycle_map = defaultdict(lambda: defaultdict(bool))
+        self.__interval_counters = {}
+
+    def register_interval_counter(self, name, interval):
+        self.__interval_counters[name] = {
+            "interval": interval,
+            "buckets": defaultdict(int)
+        }
+
+    def incr_interval_counter(self, name, cycle):
+        interval = self.__interval_counters[name]["interval"]
+        bucket = (cycle // interval) * interval
+        self.__interval_counters[name]["buckets"][bucket] += 1
 
     # register a counter stat with unique name
     def register_counter(self, name):
@@ -59,6 +71,20 @@ class Stats:
         plt.savefig(filename, dpi=150)
         plt.close()
 
+    def plot_interval_graph(self, data, label, interval):
+        x = sorted(data.keys())
+        y = [data[i] for i in x]
+
+        plt.figure(figsize=(10, 4))
+        plt.plot(x, y, marker = 'o')
+        plt.xlabel(f"Cycle interval (every {interval} cycles)")
+        plt.ylabel("Packets sent")
+        plt.title(f"{label}")
+        plt.grid(True)
+        filename = f"../outputs/{label}.png"
+        plt.savefig(filename)
+        plt.close()
+
     def dump_summary(self):
         for name, val in self.__int_counters.items():
             logger.info(f"{name}: {val}")
@@ -68,4 +94,7 @@ class Stats:
     def generate_plots(self):
         for stat_name, cycle_count in self.__cycle_map.items():
             self.plot_graph(cycle_count, stat_name)
+
+        for name, info in self.__interval_counters.items():
+            self.plot_interval_graph(info["buckets"], f"{name}", info["interval"])
 

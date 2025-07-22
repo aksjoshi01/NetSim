@@ -42,5 +42,7 @@ class Parser:
         @return     a list of values read from the input file
         """
         filepath = os.path.join(self.__config_dir, filename)
-        with open(filepath, newline = '') as f:
+        if not os.path.exists(filepath):
+            raise FileNotFoundError(f"Config file missing: {filepath}")
+        with open(filepath, newline='') as f:
             return list(csv.DictReader(f))

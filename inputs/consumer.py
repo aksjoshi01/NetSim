@@ -18,7 +18,7 @@ class Consumer(Node):
         super().__init__()
         self.rate = 4
 
-    def initialize(self):
+    def setup(self):
         self.get_stats().register_counter(f"pkts_recvd")
         self.get_stats().register_cycle_map(f"{self.get_node_id()}")
 
@@ -28,20 +28,18 @@ class Consumer(Node):
         @param      cycle - an integer representing current simulation time.
         """
         self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, False)
+        input_port = 'B_in'
 
         if cycle % self.rate  != 0:
             return
 
-        input_ports = self.get_input_ports()
-        input_port = next(iter(input_ports.values()))
-
-        pkt = self.recv_pkt(input_port.get_port_id(), cycle)
+        pkt = self.recv_pkt(input_port, cycle)
         if pkt:
-            logger.info(f"{self.get_node_id()} received packet {pkt.get_pkt_id()} on {input_port.get_port_id()}")
+            logger.info(f"{self.get_node_id()} received packet {pkt.get_pkt_id()} on {input_port}")
             self.incr_counter(f"pkts_recvd", 1)
             self.record_cycle(f"{self.get_node_id()}", cycle, True)
 
-    def finalize(self):
+    def teardown(self):
         logger.info(f"Node {self.get_node_id()} stats:")
         self.get_stats().dump_summary()
         logger.info(f"\n")

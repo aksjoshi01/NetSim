@@ -58,7 +58,15 @@ def parse_args():
         help="Set the logging level (default: INFO)"
     )
 
+    parser.add_argument(
+        "--log-scope",
+        type=str,
+        default="all",
+        help="comma-separated list of module names to include in logging (e.g., 'node,producer'). Use 'all' for everything"
+    )
+
     return parser.parse_args()
+
 
 
 if __name__ == "__main__":
@@ -74,6 +82,22 @@ if __name__ == "__main__":
             level = getattr(logging, args.log_level),
             format = "[%(levelname)s] %(name)s: %(message)s",
         )
+
+        class ModuleFilter(logging.Filter):
+            def __init__(self, allowed_modules):
+                super().__init__()
+                self.allowed_modules = allowed_modules
+
+            def filter(self, record):
+                if "all" in self.allowed_modules:
+                    return True
+                return any(mod in record.name for mod in self.allowed_modules)
+
+        allowed_modules = args.log_scope.split(",")
+        filter = ModuleFilter(allowed_modules)
+        root_logger = logging.getLogger()
+        for handler in root_logger.handlers:
+            handler.addFilter(filter)
 
     config_dir = os.path.abspath(args.config)
     user_nodes_dir = os.path.abspath(args.inputs)

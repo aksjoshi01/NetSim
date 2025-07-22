@@ -4,6 +4,9 @@
 @author     Akshay Joshi
 """
 
+import logging
+logger = logging.getLogger(__name__)
+
 from collections import deque
 from typing import Optional
 
@@ -72,20 +75,25 @@ class Link:
     def get_credit_pipeline(self):
         return self.__credit_pipeline
 
-    def push_pkt(self, item, current_cycle, pipeline_type: str):
+    def is_space(self, pipeline):
+        if len(pipeline) < pipeline.maxlen:
+            return True
+        return False
+
+    def push_pkt(self, item, current_cycle, pipeline_type):
         assert item is not None, "Error: item cannot be None"
         assert pipeline_type in ('data', 'credit'), "Error: pipeline_type must be 'data' or 'credit'"
 
         pipeline = self.get_pipeline() if pipeline_type == "data" else self.get_credit_pipeline()
 
-        if len(pipeline) < self.get_latency():
+        if self.is_space(pipeline):
             pipeline.append([item, current_cycle])
             return 0
 
         return -1
 
 
-    def advance(self, current_cycle: int):
+    def advance(self, current_cycle):
         """
         @brief      Advances the packets in the pipeline.
         @param      current_cycle - integer value representing the simulation time.

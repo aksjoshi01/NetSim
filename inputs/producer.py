@@ -19,10 +19,11 @@ class Producer(Node):
         """
         super().__init__()
 
-    def initialize(self):
+    def setup(self):
         self.get_stats().register_counter(f"pkts_sent")
         self.get_stats().register_counter(f"pkts_failed")
         self.get_stats().register_cycle_map(f"{self.get_node_id()}")
+        self.get_stats().register_interval_counter(f"pkts_sent_interval_{self.get_node_id()}", interval = 5)
 
     def advance(self, cycle):
         """
@@ -31,39 +32,37 @@ class Producer(Node):
         """
         self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, False)
 
-        if self.get_node_id() == "A1" or self.get_node_id() == "A2":
+        # if self.get_node_id() == "A1" or self.get_node_id() == "A2":
+            # return
+
+        if self.get_node_id() == "A0":
+            stream_rate = 1
+        elif self.get_node_id() == "A1":
+            stream_rate = 2
+        elif self.get_node_id() == "A2":
+            stream_rate = 4
+        else:
             return
 
-        # if self.get_node_id() == "A0":
-        #     stream_rate = 1
-        # elif self.get_node_id() == "A1":
-        #     stream_rate = 2
-        # elif self.get_node_id() == "A2":
-        #     stream_rate = 4
-        # else:
-        #     return
-
-        # if cycle % stream_rate != 0:
-        #     return
-
-        output_ports = self.get_output_ports()
-        if not output_ports:
+        if cycle % stream_rate != 0:
             return
+
+        output_port = self.get_node_id() + '_out'
 
         pkt_id = self.get_node_id() + "_" + str(cycle)
         data = "__" + self.get_node_id() + "___" + str(cycle)
         packet = Packet(pkt_id, data)
-        output_port = next(iter(output_ports.values()))
 
-        if self.send_pkt(packet, output_port.get_port_id(), cycle) < 0:
+        if self.send_pkt(packet, output_port, cycle) < 0:
             logger.warning(f"{self.get_node_id()} unable to send packet {pkt_id}")
             self.incr_counter(f"pkts_failed", 1)
         else:
-            logger.info(f"{self.get_node_id()} sent packet {pkt_id} => curr_credit = {output_port.get_credit()}")
+            logger.info(f"{self.get_node_id()} sent packet {pkt_id}")
             self.incr_counter(f"pkts_sent", 1)
             self.record_cycle(f"{self.get_node_id()}", cycle, True)
+            self.get_stats().incr_interval_counter(f"pkts_sent_interval_{self.get_node_id()}", cycle)
 
-    def finalize(self):
+    def teardown(self):
         logger.info(f"Node {self.get_node_id()} stats:")
         self.get_stats().dump_summary()
         logger.info(f"\n")

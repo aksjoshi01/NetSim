@@ -4,12 +4,12 @@
 @author     Akshay Joshi
 """
 
-import logging
 from collections import deque
 
 from link import Link
 from packet import Packet, CreditPacket
 
+import logging
 logger = logging.getLogger(__name__)
 
 class Port:
@@ -78,7 +78,7 @@ class InputPort(Port):
     def get_fifo(self):
         return self.__fifo
 
-    def recv_pkt(self, current_cycle: int):
+    def recv_pkt(self, current_cycle):
         """
         @brief      Receive the packet from its fifo, if present.
         @param      current_cycle - the current simulation time.
@@ -96,7 +96,7 @@ class InputPort(Port):
         
         return None
 
-    def recv_from_link(self, pkt: 'Packet'):
+    def recv_from_link(self, pkt):
         """
         @brief      Pushes the packet to its fifo.
         @param      pkt - the packet to be pushed.
@@ -136,7 +136,7 @@ class OutputPort(Port):
         """
         self.__credit -= 1
 
-    def send_pkt(self, pkt: 'Packet', current_cycle: int):
+    def send_pkt(self, pkt, current_cycle):
         """
         @brief      Forwards the pkt to the connected link.
         @param      pkt - packet to be forwarded.

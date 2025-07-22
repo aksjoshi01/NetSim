@@ -54,17 +54,17 @@ class Simulator:
         assert link_id not in self.__links, f"Error: multiple links have same ID {link_id}"
         self.__links[link_id] = link
 
-    def initialize(self):
+    def setup(self):
         logger.info("===== Simulation =====")
         for node in self.__nodes.values():
-            node.initialize()
+            node.setup()
 
     def run(self):
         """
         @brief      Runs the simulation for `max_cycles`. In each cycle, it calls 
                     the `advance()` method on all registered links and nodes.
         """
-        self.initialize()
+        self.setup()
 
         for cycle in range(self.__max_cycles):
             logger.info(f"=== Cycle {cycle} ===")
@@ -76,13 +76,13 @@ class Simulator:
                 node.advance(cycle)
             logger.info(f"\n")
 
-        self.finalize()
         print(f"Simulation completed. \nLog files, statistics and plots can be found in ../outputs/ directory")
+        self.teardown()
 
-    def finalize(self):
+    def teardown(self):
         logger.info(f"===== Statistics =====")
         for node in self.__nodes.values():
-            node.finalize()
+            node.teardown()
 
     def build_nodes(self, parser, user_nodes_dir):
         """
