@@ -30,7 +30,7 @@ class Producer(Node):
         @brief      Generates packets every cycle and attempts to send it.
         @param      cycle - an integer representing current simulation time.
         """
-        self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, False)
+        self.record_cycle_stats(f"{self.get_node_id()}", cycle, False)
 
         # if self.get_node_id() == "A1" or self.get_node_id() == "A2":
             # return
@@ -55,14 +55,9 @@ class Producer(Node):
 
         if self.send_pkt(packet, output_port, cycle) < 0:
             logger.warning(f"{self.get_node_id()} unable to send packet {pkt_id}")
-            self.incr_counter(f"pkts_failed", 1)
+            self.incr_counter_stats(f"pkts_failed", 1)
         else:
-            logger.info(f"{self.get_node_id()} sent packet {pkt_id}")
-            self.incr_counter(f"pkts_sent", 1)
-            self.record_cycle(f"{self.get_node_id()}", cycle, True)
-            self.get_stats().incr_interval_counter(f"pkts_sent_interval_{self.get_node_id()}", cycle)
-
-    def teardown(self):
-        logger.info(f"Node {self.get_node_id()} stats:")
-        self.get_stats().dump_summary()
-        logger.info(f"\n")
+            logger.debug(f"{self.get_node_id()} sent packet {pkt_id}")
+            self.incr_counter_stats(f"pkts_sent", 1)
+            self.record_cycle_stats(f"{self.get_node_id()}", cycle, True)
+            self.incr_interval_counter_stats(f"pkts_sent_interval_{self.get_node_id()}", cycle, 1)

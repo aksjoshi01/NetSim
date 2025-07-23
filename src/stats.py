@@ -21,22 +21,19 @@ class Stats:
             "buckets": defaultdict(int)
         }
 
-    def incr_interval_counter(self, name, cycle):
+    def incr_interval_counter(self, name, cycle, amount):
         interval = self.__interval_counters[name]["interval"]
         bucket = (cycle // interval) * interval
-        self.__interval_counters[name]["buckets"][bucket] += 1
+        self.__interval_counters[name]["buckets"][bucket] += amount
 
-    # register a counter stat with unique name
     def register_counter(self, name):
         assert name not in self.__int_counters, "Error: duplicate names for stat counters"
         self.__int_counters[name]
 
-    # increment the `name` counter - throw an error if no such name exists
     def incr_counter(self, name, amount):
         assert name in self.__int_counters, "Error: counter name is invalid"
         self.__int_counters[name] += amount
 
-    # get the value of the `name` counter - throw an error if name does not exist
     def get_counter(self, name):
         assert name in self.__int_counters, "Error: counter name is invalid"
         return self.__int_counters[name]

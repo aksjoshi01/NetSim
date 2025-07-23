@@ -32,20 +32,22 @@ class Node:
     def get_stats(self):
         return self.__stats
 
-    # wrapper over incr_counter() in Stats
-    def incr_counter(self, name, amount):
+    def incr_counter_stats(self, name, amount):
         self.get_stats().incr_counter(name, amount)
 
-    # wrapper over record_cycle() in Stats
-    def record_cycle(self, name, cycle, val):
+    def record_cycle_stats(self, name, cycle, val):
         self.get_stats().record_cycle(name, cycle, val)
 
-    def set_node_id(self, node_id: str):
+    def incr_interval_counter_stats(self, name, cycle, amount):
+        self.get_stats().incr_interval_counter(name, cycle, amount)
+
+    def set_node_id(self, node_id):
         """
         @brief      Assigns the node_id to the Node object.
         @param      node_id - a string representing the ID of the node.
         """
         assert node_id is not None, "Error: node_id cannot be None"
+        assert isinstance(node_id, str), "Error: node_id should be a string"
         self.__node_id = node_id
 
     def get_node_id(self):
@@ -133,7 +135,12 @@ class Node:
             return pkt
         
         return None
-        
+
+    def teardown(self):
+        logger.info(f"Node {self.get_node_id()} stats:")
+        self.get_stats().dump_summary()
+        logger.info(f"\n")
+
     @abstractmethod
     def advance(self, current_cycle: int):
         pass
@@ -142,6 +149,3 @@ class Node:
     def setup(self):
         pass
 
-    @abstractmethod
-    def teardown(self):
-        pass

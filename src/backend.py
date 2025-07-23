@@ -10,68 +10,54 @@ import sys
 import logging
 logger = logging.getLogger(__name__)
 
-from node import Node
-from link import Link
-from packet import Packet
-from port import OutputPort, InputPort
 from simulator import Simulator
 from parser import Parser
 
-def validate_directory(path, name):
-    if not os.path.exists(path):
-        logger.error(f"{name} directory does not exist: {path}")
-        sys.exit(-1)
-    if not os.path.isdir(path):
-        logger.error(f"{name} path is not a directory: {path}")
-        sys.exit(-1)
-
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Run network simulation.")
+    parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "--config",
-        type=str,
-        required=True,
-        help="Relative path to the directory containing topology CSV files"
+        "--nodes",
+        type = str,
+        required = True,
+        help = "Relative path to the nodes csv file"
     )
-
+    parser.add_argument(
+        "--connections",
+        type = str,
+        required = True,
+        help = "Relative path to the topology csv file"
+    )
     parser.add_argument(
         "--inputs",
-        type=str,
-        required=True,
-        help="Relative path to the directory containing user-defined node implementations"
+        type = str,
+        required = True,
+        help = "Relative path to the directory containing user-defined node implementations"
     )
-
     parser.add_argument(
         "--cycles",
-        type=int,
-        default=10,
-        help="Number of simulation cycles (default: 10)"
+        type = int,
+        default = 10,
+        help = "Number of simulation cycles (default: 10)"
     )
-
     parser.add_argument(
         "--log-level",
-        type=str,
-        default="INFO",
-        choices=["DEBUG", "INFO", "WARNING", "ERROR", "OFF"],
-        help="Set the logging level (default: INFO)"
+        type = str,
+        default = "INFO",
+        choices = ["DEBUG", "INFO", "WARNING", "ERROR", "OFF"],
+        help = "Set the logging level (default: INFO)"
     )
-
     parser.add_argument(
         "--log-scope",
-        type=str,
-        default="all",
-        help="comma-separated list of module names to include in logging (e.g., 'node,producer'). Use 'all' for everything"
+        type = str,
+        default = "all",
+        help = "comma-separated list of module names to include in logging (e.g., 'node,producer'). Use 'all' for everything"
     )
 
     return parser.parse_args()
 
-
-
-if __name__ == "__main__":
-    args = parse_args()
-
+def setup_logger(args):
     if args.log_level == "OFF":
         logging.disable(logging.CRITICAL)
     else:
@@ -99,28 +85,21 @@ if __name__ == "__main__":
         for handler in root_logger.handlers:
             handler.addFilter(filter)
 
-    config_dir = os.path.abspath(args.config)
+if __name__ == "__main__":
+    args = parse_args()
+    setup_logger(args)
+
+    node_config = os.path.abspath(args.nodes)
+    connection_config = os.path.abspath(args.connections)
     user_nodes_dir = os.path.abspath(args.inputs)
 
-    # Validate directories
-    validate_directory(config_dir, "Config")
-    validate_directory(user_nodes_dir, "Inputs")
-
-    # Validate number of cycles
     if args.cycles <= 0:
         logger.error(f"Number of cycles must be positive. Got: {args.cycles}")
         sys.exit(-1)
 
-    # Log simulation setup
-    logger.info(f"Config directory: {config_dir}")
-    logger.info(f"Inputs directory: {user_nodes_dir}")
-    logger.info(f"Number of cycles: {args.cycles}")
+    parser = Parser(node_config, connection_config, user_nodes_dir)
 
-    # Run simulation
-    parser = Parser(config_dir)
-    parser.parse()
-
-    sim = Simulator(args.cycles)
-    sim.build_nodes(parser, user_nodes_dir)
-    sim.build_connections(parser)
+    sim = Simulator(args.cycles, parser)
+    sim.setup()
     sim.run()
+    sim.teardown()

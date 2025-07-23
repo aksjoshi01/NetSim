@@ -76,10 +76,8 @@ class Link:
         return self.__credit_pipeline
 
     def is_space(self, pipeline):
-        if len(pipeline) < pipeline.maxlen:
-            return True
-        return False
-
+        return len(pipeline) < pipeline.maxlen
+    
     def push_pkt(self, item, current_cycle, pipeline_type):
         assert item is not None, "Error: item cannot be None"
         assert pipeline_type in ('data', 'credit'), "Error: pipeline_type must be 'data' or 'credit'"

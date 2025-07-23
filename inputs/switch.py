@@ -46,7 +46,7 @@ class Switch(Node):
                     input port to select the packet to be forwarded.
         @param      cycle - an integer representing current simulation time
         """
-        self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, False)
+        self.record_cycle_stats(f"{self.get_node_id()}", cycle, False)
         input_ports = ['S0_in', 'S1_in', 'S2_in']
         output_port = 'S_out'
 
@@ -61,7 +61,7 @@ class Switch(Node):
             input_port = self.get_input_port(input_ports[port_idx])
             pkt = self.recv_pkt(input_port.get_port_id(), cycle)
             if pkt:
-                logger.info(f"Switch received packet {pkt.get_pkt_id()} from {input_port.get_port_id()}")
+                logger.debug(f"Switch received packet {pkt.get_pkt_id()} from {input_port.get_port_id()}")
                 ready_cycle = cycle + self.get_processing_latency()
                 self.get_pipeline().append((ready_cycle, pkt, input_port.get_port_id()))
                 self.set_rr_index((port_idx + 1) % num_inputs)
@@ -73,14 +73,9 @@ class Switch(Node):
             if ready_cycle == cycle:
                 val = self.send_pkt(pkt, output_port, cycle)
                 if val == 0:
-                    logger.info(f"Switch forwarded packet {pkt.get_pkt_id()} from {input_port_id} to {output_port}")
+                    logger.debug(f"Switch forwarded packet {pkt.get_pkt_id()} from {input_port_id} to {output_port}")
                     self.get_pipeline().popleft()
-                    self.incr_counter(f"pkts_forwarded", 1)
-                    self.record_cycle(f"{self.get_node_id()}", cycle, True)
+                    self.incr_counter_stats(f"pkts_forwarded", 1)
+                    self.record_cycle_stats(f"{self.get_node_id()}", cycle, True)
                 else:
-                    logger.error(f"Switch unable to send packet {pkt.get_pkt_id()} - error code: {val}")
-
-    def teardown(self):
-        logger.info(f"Node {self.get_node_id()} stats:")
-        self.get_stats().dump_summary()
-        logger.info(f"\n")
+                    logger.error(f"Switch unable to send packet {pkt.get_pkt_id()}")

@@ -32,8 +32,8 @@ class CPU(Node):
             if status < 0:
                 logger.warning(f"Node {self.get_node_id()} unable to send pkt {pkt.get_pkt_id()}")
             else:
-                logger.info(f"Node '{self.get_node_id()}' sent pkt {pkt.get_pkt_id()}")
+                logger.debug(f"Node '{self.get_node_id()}' sent pkt {pkt.get_pkt_id()}")
         
         pkt = self.recv_pkt("BrecvsA", current_cycle)
         if pkt is not None:
-            logger.info(f"Node {self.get_node_id()} received pkt {pkt.get_pkt_id()}")
+            logger.debug(f"Node {self.get_node_id()} received pkt {pkt.get_pkt_id()}")

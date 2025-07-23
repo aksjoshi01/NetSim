@@ -27,19 +27,14 @@ class Consumer(Node):
         @brief      Attempt to receive packets from input ports.
         @param      cycle - an integer representing current simulation time.
         """
-        self.get_stats().record_cycle(f"{self.get_node_id()}", cycle, False)
+        self.record_cycle_stats(f"{self.get_node_id()}", cycle, False)
         input_port = 'B_in'
 
-        if cycle % self.rate  != 0:
-            return
+        # if cycle % self.rate  != 0:
+        #     return
 
         pkt = self.recv_pkt(input_port, cycle)
         if pkt:
-            logger.info(f"{self.get_node_id()} received packet {pkt.get_pkt_id()} on {input_port}")
-            self.incr_counter(f"pkts_recvd", 1)
-            self.record_cycle(f"{self.get_node_id()}", cycle, True)
-
-    def teardown(self):
-        logger.info(f"Node {self.get_node_id()} stats:")
-        self.get_stats().dump_summary()
-        logger.info(f"\n")
+            logger.debug(f"{self.get_node_id()} received packet {pkt.get_pkt_id()} on {input_port}")
+            self.incr_counter_stats(f"pkts_recvd", 1)
+            self.record_cycle_stats(f"{self.get_node_id()}", cycle, True)
