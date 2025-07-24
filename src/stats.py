@@ -38,7 +38,7 @@ class Stats:
         assert name in self.__int_counters, "Error: counter name is invalid"
         return self.__int_counters[name]
 
-    def register_cycle_map(self, name):
+    def register_cycle(self, name):
         assert name not in self.__cycle_map, "Error: duplicate names for stat cycle map"
         self.__cycle_map[name]
 

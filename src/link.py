@@ -31,7 +31,6 @@ class Link:
         self.__input_port = None
         self.__pipeline = deque(maxlen = latency)
         self.__credit_pipeline = deque(maxlen = latency)
-        self.__cycle = -1
 
     def set_output_port(self, output_port: 'OutputPort'):
         """
@@ -56,35 +55,16 @@ class Link:
         """
         return self.__link_id
 
-    def get_latency(self):
-        """
-        @brief      Returns the link latency.
-        @return     an integer value representing latency of the link.
-        """
-        return self.__latency
-
-    def get_input_port(self):
-        return self.__input_port
-
-    def get_output_port(self):
-        return self.__output_port
-
-    def get_pipeline(self):
-        return self.__pipeline
-
-    def get_credit_pipeline(self):
-        return self.__credit_pipeline
-
-    def is_space(self, pipeline):
+    def __is_space(self, pipeline):
         return len(pipeline) < pipeline.maxlen
     
     def push_pkt(self, item, current_cycle, pipeline_type):
         assert item is not None, "Error: item cannot be None"
         assert pipeline_type in ('data', 'credit'), "Error: pipeline_type must be 'data' or 'credit'"
 
-        pipeline = self.get_pipeline() if pipeline_type == "data" else self.get_credit_pipeline()
+        pipeline = self.__pipeline if pipeline_type == "data" else self.__credit_pipeline
 
-        if self.is_space(pipeline):
+        if self.__is_space(pipeline):
             pipeline.append([item, current_cycle])
             return 0
 
@@ -93,12 +73,12 @@ class Link:
     def __advance_pipeline(self, pipeline, current_cycle):
         if len(pipeline) > 0:
             pkt = pipeline[0]
-            if pkt[1] + self.get_latency() == current_cycle:
+            if pkt[1] + self.__latency == current_cycle:
                 pipeline.popleft()
                 if isinstance(pkt[0], Packet):
-                    self.get_input_port().recv_from_link(pkt[0])
+                    self.__input_port.push_pkt(pkt[0])
                 else:
-                    self.get_output_port().increment_credit()
+                    self.__output_port.push_pkt(pkt[0], current_cycle)
 
     def advance(self, current_cycle):
         """

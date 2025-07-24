@@ -19,8 +19,8 @@ class Consumer(Node):
         self.rate = 4
 
     def setup(self):
-        self.get_stats().register_counter(f"pkts_recvd")
-        self.get_stats().register_cycle_map(f"{self.get_node_id()}")
+        self.register_counter_stats(f"pkts_recvd")
+        self.register_cycle_stats(f"{self.get_node_id()}")
 
     def advance(self, cycle):
         """
