@@ -65,7 +65,7 @@ class Stats:
 
         filename = f"../outputs/{name}_log.png"
         plt.tight_layout()
-        plt.savefig(filename, dpi=150)
+        plt.savefig(filename)
         plt.close()
 
     def plot_interval_graph(self, data, label, interval):

@@ -112,22 +112,13 @@ class Simulator:
         @param      parser - parsed data that contains the topology of the network.
         """
         for data in self.__parser.connections:
-            src_node_id = data.get_src_node()
-            dst_node_id = data.get_dst_node()
-            output_port_id = data.get_op_id()
-            input_port_id = data.get_ip_id()
-            credit = data.get_credit()
-            fifo_size = data.get_fifo_size()
-            latency = data.get_latency()
-            link_id = data.get_link_id()
+            src_node = self.get_node(data.get_src_node())
+            dst_node = self.get_node(data.get_dst_node())
 
-            src_node = self.get_node(src_node_id)
-            dst_node = self.get_node(dst_node_id)
+            link = Link(data.get_link_id(), data.get_latency())
 
-            link = Link(link_id, latency)
-
-            output_port = OutputPort(output_port_id, credit, link)
-            input_port = InputPort(input_port_id, fifo_size, link)
+            output_port = OutputPort(data.get_op_id(), data.get_credit(), link)
+            input_port = InputPort(data.get_ip_id(), data.get_fifo_size(), link)
 
             link.set_output_port(output_port)
             link.set_input_port(input_port)

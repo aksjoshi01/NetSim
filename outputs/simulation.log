@@ -1,233 +1,276 @@
-[INFO] __main__: Config directory: /home/akshayjo/Documents/netsim/config
-[INFO] __main__: Inputs directory: /home/akshayjo/Documents/netsim/inputs
-[INFO] __main__: Number of cycles: 30
-[INFO] simulator: ===== Simulation =====
-[INFO] simulator: === Cycle 0 ===
-[INFO] producer: A0 sent packet A0_0 => curr_credit = 7
-[INFO] producer: A1 sent packet A1_0 => curr_credit = 7
-[INFO] producer: A2 sent packet A2_0 => curr_credit = 7
-[INFO] simulator: 
+[DEBUG] simulator: ===== Simulation =====
+[DEBUG] simulator: === Cycle 0 ===
+[DEBUG] producer: A0 sent packet A0_0
+[DEBUG] producer: A1 sent packet A1_0
+[DEBUG] producer: A2 sent packet A2_0
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 1 ===
-[INFO] producer: A0 sent packet A0_1 => curr_credit = 6
-[INFO] simulator: 
+[DEBUG] simulator: === Cycle 1 ===
+[DEBUG] producer: A0 sent packet A0_1
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 2 ===
-[INFO] producer: A0 sent packet A0_2 => curr_credit = 5
-[INFO] producer: A1 sent packet A1_2 => curr_credit = 6
-[INFO] simulator: 
+[DEBUG] simulator: === Cycle 2 ===
+[DEBUG] producer: A0 sent packet A0_2
+[DEBUG] producer: A1 sent packet A1_2
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 3 ===
-[INFO] producer: A0 sent packet A0_3 => curr_credit = 4
-[INFO] simulator: 
+[DEBUG] simulator: === Cycle 3 ===
+[DEBUG] producer: A0 sent packet A0_3
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 4 ===
-[INFO] producer: A0 sent packet A0_4 => curr_credit = 3
-[INFO] producer: A1 sent packet A1_4 => curr_credit = 5
-[INFO] producer: A2 sent packet A2_4 => curr_credit = 6
-[INFO] switch: Switch received packet A0_0 from S0_in
-[INFO] simulator: 
+[DEBUG] simulator: === Cycle 4 ===
+[DEBUG] producer: A0 sent packet A0_4
+[DEBUG] producer: A1 sent packet A1_4
+[DEBUG] producer: A2 sent packet A2_4
+[DEBUG] switch: Switch received packet A0_0 from S0_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 5 ===
-[INFO] producer: A0 sent packet A0_5 => curr_credit = 2
-[INFO] switch: Switch received packet A1_0 from S1_in
-[INFO] simulator: 
+[DEBUG] simulator: === Cycle 5 ===
+[DEBUG] producer: A0 sent packet A0_5
+[DEBUG] switch: Switch received packet A1_0 from S1_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 6 ===
-[INFO] producer: A0 sent packet A0_6 => curr_credit = 1
-[INFO] producer: A1 sent packet A1_6 => curr_credit = 4
-[INFO] switch: Switch received packet A2_0 from S2_in
-[INFO] switch: Switch forwarded packet A0_0 from S0_in to S_out
-[INFO] simulator: 
+[DEBUG] simulator: === Cycle 6 ===
+[DEBUG] producer: A0 sent packet A0_6
+[DEBUG] producer: A1 sent packet A1_6
+[DEBUG] switch: Switch received packet A2_0 from S2_in
+[DEBUG] switch: Switch forwarded packet A0_0 from S0_in to S_out
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 7 ===
-[INFO] producer: A0 sent packet A0_7 => curr_credit = 0
-[INFO] switch: Switch received packet A0_1 from S0_in
-[INFO] switch: Switch forwarded packet A1_0 from S1_in to S_out
-[INFO] simulator: 
+[DEBUG] simulator: === Cycle 7 ===
+[DEBUG] producer: A0 sent packet A0_7
+[DEBUG] switch: Switch received packet A0_1 from S0_in
+[DEBUG] switch: Switch forwarded packet A1_0 from S1_in to S_out
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 8 ===
+[DEBUG] simulator: === Cycle 8 ===
 [DEBUG] port: Port 'A0_out' received credit
-[INFO] producer: A0 sent packet A0_8 => curr_credit = 0
-[INFO] producer: A1 sent packet A1_8 => curr_credit = 3
-[INFO] producer: A2 sent packet A2_8 => curr_credit = 5
-[INFO] switch: Switch received packet A1_2 from S1_in
-[INFO] switch: Switch forwarded packet A2_0 from S2_in to S_out
-[INFO] simulator: 
+[DEBUG] producer: A0 sent packet A0_8
+[DEBUG] producer: A1 sent packet A1_8
+[DEBUG] producer: A2 sent packet A2_8
+[DEBUG] switch: Switch received packet A1_2 from S1_in
+[DEBUG] switch: Switch forwarded packet A2_0 from S2_in to S_out
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 9 ===
+[DEBUG] simulator: === Cycle 9 ===
 [DEBUG] port: Port 'A1_out' received credit
 [WARNING] producer: A0 unable to send packet A0_9
-[INFO] switch: Switch received packet A2_4 from S2_in
-[INFO] switch: Switch forwarded packet A0_1 from S0_in to S_out
-[INFO] simulator: 
+[DEBUG] switch: Switch received packet A2_4 from S2_in
+[DEBUG] switch: Switch forwarded packet A0_1 from S0_in to S_out
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 10 ===
+[DEBUG] simulator: === Cycle 10 ===
 [DEBUG] port: Port 'A2_out' received credit
 [WARNING] producer: A0 unable to send packet A0_10
-[INFO] producer: A1 sent packet A1_10 => curr_credit = 3
-[INFO] switch: Switch received packet A0_2 from S0_in
-[INFO] switch: Switch forwarded packet A1_2 from S1_in to S_out
-[INFO] simulator: 
+[DEBUG] producer: A1 sent packet A1_10
+[DEBUG] switch: Switch received packet A0_2 from S0_in
+[DEBUG] switch: Switch forwarded packet A1_2 from S1_in to S_out
+[DEBUG] consumer: B received packet A0_0 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 11 ===
+[DEBUG] simulator: === Cycle 11 ===
 [DEBUG] port: Port 'A0_out' received credit
-[INFO] producer: A0 sent packet A0_11 => curr_credit = 0
-[INFO] switch: Switch received packet A1_4 from S1_in
-[INFO] switch: Switch forwarded packet A2_4 from S2_in to S_out
-[INFO] simulator: 
+[DEBUG] producer: A0 sent packet A0_11
+[DEBUG] switch: Switch received packet A1_4 from S1_in
+[DEBUG] switch: Switch forwarded packet A2_4 from S2_in to S_out
+[DEBUG] consumer: B received packet A1_0 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 12 ===
+[DEBUG] simulator: === Cycle 12 ===
 [DEBUG] port: Port 'A1_out' received credit
 [WARNING] producer: A0 unable to send packet A0_12
-[INFO] producer: A1 sent packet A1_12 => curr_credit = 3
-[INFO] producer: A2 sent packet A2_12 => curr_credit = 5
-[INFO] switch: Switch received packet A2_8 from S2_in
-[INFO] switch: Switch forwarded packet A0_2 from S0_in to S_out
-[INFO] consumer: B received packet A0_0 on B_in
-[INFO] simulator: 
+[DEBUG] producer: A1 sent packet A1_12
+[DEBUG] producer: A2 sent packet A2_12
+[DEBUG] switch: Switch received packet A2_8 from S2_in
+[DEBUG] switch: Switch forwarded packet A0_2 from S0_in to S_out
+[DEBUG] consumer: B received packet A2_0 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 13 ===
+[DEBUG] simulator: === Cycle 13 ===
 [DEBUG] port: Port 'A2_out' received credit
 [WARNING] producer: A0 unable to send packet A0_13
-[INFO] switch: Switch received packet A0_3 from S0_in
-[INFO] switch: Switch forwarded packet A1_4 from S1_in to S_out
-[INFO] simulator: 
+[DEBUG] switch: Switch received packet A0_3 from S0_in
+[DEBUG] switch: Switch forwarded packet A1_4 from S1_in to S_out
+[DEBUG] consumer: B received packet A0_1 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 14 ===
+[DEBUG] simulator: === Cycle 14 ===
 [DEBUG] port: Port 'A0_out' received credit
-[INFO] producer: A0 sent packet A0_14 => curr_credit = 0
-[INFO] producer: A1 sent packet A1_14 => curr_credit = 2
-[ERROR] switch: Switch unable to send packet A2_8 - error code: -10
-[INFO] simulator: 
+[DEBUG] port: Port 'S_out' received credit
+[DEBUG] producer: A0 sent packet A0_14
+[DEBUG] producer: A1 sent packet A1_14
+[DEBUG] switch: Switch received packet A1_6 from S1_in
+[DEBUG] switch: Switch forwarded packet A2_8 from S2_in to S_out
+[DEBUG] consumer: B received packet A1_2 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 15 ===
+[DEBUG] simulator: === Cycle 15 ===
 [DEBUG] port: Port 'A1_out' received credit
+[DEBUG] port: Port 'S_out' received credit
 [WARNING] producer: A0 unable to send packet A0_15
-[INFO] simulator: 
+[DEBUG] switch: Switch received packet A0_4 from S0_in
+[DEBUG] switch: Switch forwarded packet A0_3 from S0_in to S_out
+[DEBUG] consumer: B received packet A2_4 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 16 ===
+[DEBUG] simulator: === Cycle 16 ===
 [DEBUG] port: Port 'A2_out' received credit
 [DEBUG] port: Port 'S_out' received credit
 [WARNING] producer: A0 unable to send packet A0_16
-[INFO] producer: A1 sent packet A1_16 => curr_credit = 2
-[INFO] producer: A2 sent packet A2_16 => curr_credit = 6
-[INFO] switch: Switch received packet A1_6 from S1_in
-[INFO] consumer: B received packet A1_0 on B_in
-[INFO] simulator: 
+[DEBUG] producer: A1 sent packet A1_16
+[DEBUG] producer: A2 sent packet A2_16
+[DEBUG] switch: Switch received packet A1_8 from S1_in
+[DEBUG] switch: Switch forwarded packet A1_6 from S1_in to S_out
+[DEBUG] consumer: B received packet A0_2 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 17 ===
+[DEBUG] simulator: === Cycle 17 ===
 [DEBUG] port: Port 'A0_out' received credit
-[INFO] producer: A0 sent packet A0_17 => curr_credit = 0
-[INFO] switch: Switch received packet A2_12 from S2_in
-[INFO] simulator: 
+[DEBUG] port: Port 'S_out' received credit
+[DEBUG] producer: A0 sent packet A0_17
+[DEBUG] switch: Switch received packet A2_12 from S2_in
+[DEBUG] switch: Switch forwarded packet A0_4 from S0_in to S_out
+[DEBUG] consumer: B received packet A1_4 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 18 ===
+[DEBUG] simulator: === Cycle 18 ===
+[DEBUG] port: Port 'A1_out' received credit
+[DEBUG] port: Port 'S_out' received credit
 [WARNING] producer: A0 unable to send packet A0_18
-[INFO] producer: A1 sent packet A1_18 => curr_credit = 1
-[INFO] switch: Switch received packet A0_4 from S0_in
-[INFO] simulator: 
+[DEBUG] producer: A1 sent packet A1_18
+[DEBUG] switch: Switch received packet A0_5 from S0_in
+[DEBUG] switch: Switch forwarded packet A1_8 from S1_in to S_out
+[DEBUG] consumer: B received packet A2_8 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 19 ===
-[WARNING] producer: A0 unable to send packet A0_19
-[INFO] switch: Switch received packet A1_8 from S1_in
-[INFO] simulator: 
+[DEBUG] simulator: === Cycle 19 ===
+[DEBUG] port: Port 'A0_out' received credit
+[DEBUG] port: Port 'S_out' received credit
+[DEBUG] producer: A0 sent packet A0_19
+[DEBUG] switch: Switch received packet A1_10 from S1_in
+[DEBUG] switch: Switch forwarded packet A2_12 from S2_in to S_out
+[DEBUG] consumer: B received packet A0_3 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 20 ===
+[DEBUG] simulator: === Cycle 20 ===
 [DEBUG] port: Port 'A1_out' received credit
 [DEBUG] port: Port 'S_out' received credit
 [WARNING] producer: A0 unable to send packet A0_20
-[INFO] producer: A1 sent packet A1_20 => curr_credit = 1
-[INFO] producer: A2 sent packet A2_20 => curr_credit = 5
-[INFO] switch: Switch received packet A2_16 from S2_in
-[INFO] consumer: B received packet A2_0 on B_in
-[INFO] simulator: 
+[DEBUG] producer: A1 sent packet A1_20
+[DEBUG] producer: A2 sent packet A2_20
+[DEBUG] switch: Switch received packet A2_16 from S2_in
+[DEBUG] switch: Switch forwarded packet A0_5 from S0_in to S_out
+[DEBUG] consumer: B received packet A1_6 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 21 ===
+[DEBUG] simulator: === Cycle 21 ===
 [DEBUG] port: Port 'A2_out' received credit
+[DEBUG] port: Port 'S_out' received credit
 [WARNING] producer: A0 unable to send packet A0_21
-[INFO] switch: Switch received packet A0_5 from S0_in
-[INFO] simulator: 
+[DEBUG] switch: Switch received packet A0_6 from S0_in
+[DEBUG] switch: Switch forwarded packet A1_10 from S1_in to S_out
+[DEBUG] consumer: B received packet A0_4 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 22 ===
+[DEBUG] simulator: === Cycle 22 ===
 [DEBUG] port: Port 'A0_out' received credit
-[INFO] producer: A0 sent packet A0_22 => curr_credit = 0
-[INFO] producer: A1 sent packet A1_22 => curr_credit = 0
-[INFO] switch: Switch received packet A1_10 from S1_in
-[INFO] simulator: 
+[DEBUG] port: Port 'S_out' received credit
+[DEBUG] producer: A0 sent packet A0_22
+[DEBUG] producer: A1 sent packet A1_22
+[DEBUG] switch: Switch received packet A1_12 from S1_in
+[DEBUG] switch: Switch forwarded packet A2_16 from S2_in to S_out
+[DEBUG] consumer: B received packet A1_8 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 23 ===
+[DEBUG] simulator: === Cycle 23 ===
 [DEBUG] port: Port 'A1_out' received credit
+[DEBUG] port: Port 'S_out' received credit
 [WARNING] producer: A0 unable to send packet A0_23
-[INFO] switch: Switch received packet A0_6 from S0_in
-[INFO] simulator: 
+[DEBUG] switch: Switch received packet A0_7 from S0_in
+[DEBUG] switch: Switch forwarded packet A0_6 from S0_in to S_out
+[DEBUG] consumer: B received packet A2_12 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 24 ===
+[DEBUG] simulator: === Cycle 24 ===
 [DEBUG] port: Port 'A2_out' received credit
 [DEBUG] port: Port 'S_out' received credit
 [WARNING] producer: A0 unable to send packet A0_24
-[INFO] producer: A1 sent packet A1_24 => curr_credit = 0
-[INFO] producer: A2 sent packet A2_24 => curr_credit = 6
-[INFO] switch: Switch received packet A1_12 from S1_in
-[INFO] consumer: B received packet A0_1 on B_in
-[INFO] simulator: 
+[DEBUG] producer: A1 sent packet A1_24
+[DEBUG] producer: A2 sent packet A2_24
+[DEBUG] switch: Switch received packet A1_14 from S1_in
+[DEBUG] switch: Switch forwarded packet A1_12 from S1_in to S_out
+[DEBUG] consumer: B received packet A0_5 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 25 ===
+[DEBUG] simulator: === Cycle 25 ===
 [DEBUG] port: Port 'A0_out' received credit
-[INFO] producer: A0 sent packet A0_25 => curr_credit = 0
-[INFO] switch: Switch received packet A2_20 from S2_in
-[INFO] simulator: 
+[DEBUG] port: Port 'S_out' received credit
+[DEBUG] producer: A0 sent packet A0_25
+[DEBUG] switch: Switch received packet A2_20 from S2_in
+[DEBUG] switch: Switch forwarded packet A0_7 from S0_in to S_out
+[DEBUG] consumer: B received packet A1_10 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 26 ===
+[DEBUG] simulator: === Cycle 26 ===
 [DEBUG] port: Port 'A1_out' received credit
+[DEBUG] port: Port 'S_out' received credit
 [WARNING] producer: A0 unable to send packet A0_26
-[INFO] producer: A1 sent packet A1_26 => curr_credit = 0
-[INFO] switch: Switch received packet A0_7 from S0_in
-[INFO] simulator: 
+[DEBUG] producer: A1 sent packet A1_26
+[DEBUG] switch: Switch received packet A0_8 from S0_in
+[DEBUG] switch: Switch forwarded packet A1_14 from S1_in to S_out
+[DEBUG] consumer: B received packet A2_16 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 27 ===
+[DEBUG] simulator: === Cycle 27 ===
 [DEBUG] port: Port 'A0_out' received credit
-[INFO] producer: A0 sent packet A0_27 => curr_credit = 0
-[INFO] switch: Switch received packet A1_14 from S1_in
-[INFO] simulator: 
+[DEBUG] port: Port 'S_out' received credit
+[DEBUG] producer: A0 sent packet A0_27
+[DEBUG] switch: Switch received packet A1_16 from S1_in
+[DEBUG] switch: Switch forwarded packet A2_20 from S2_in to S_out
+[DEBUG] consumer: B received packet A0_6 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 28 ===
+[DEBUG] simulator: === Cycle 28 ===
 [DEBUG] port: Port 'A1_out' received credit
 [DEBUG] port: Port 'S_out' received credit
 [WARNING] producer: A0 unable to send packet A0_28
-[INFO] producer: A1 sent packet A1_28 => curr_credit = 0
-[INFO] producer: A2 sent packet A2_28 => curr_credit = 5
-[INFO] switch: Switch received packet A2_24 from S2_in
-[INFO] consumer: B received packet A1_2 on B_in
-[INFO] simulator: 
+[DEBUG] producer: A1 sent packet A1_28
+[DEBUG] producer: A2 sent packet A2_28
+[DEBUG] switch: Switch received packet A2_24 from S2_in
+[DEBUG] switch: Switch forwarded packet A0_8 from S0_in to S_out
+[DEBUG] consumer: B received packet A1_12 on B_in
+[DEBUG] simulator: 
 
-[INFO] simulator: === Cycle 29 ===
+[DEBUG] simulator: === Cycle 29 ===
 [DEBUG] port: Port 'A2_out' received credit
+[DEBUG] port: Port 'S_out' received credit
 [WARNING] producer: A0 unable to send packet A0_29
-[INFO] switch: Switch received packet A0_8 from S0_in
-[INFO] simulator: 
+[DEBUG] switch: Switch received packet A0_11 from S0_in
+[DEBUG] switch: Switch forwarded packet A1_16 from S1_in to S_out
+[DEBUG] consumer: B received packet A0_7 on B_in
+[DEBUG] simulator: 
 
 [INFO] simulator: ===== Statistics =====
-[INFO] producer: Node A0 stats:
-[INFO] stats: pkts_sent: 15
-[INFO] stats: pkts_failed: 15
-[INFO] producer: 
+[INFO] node: Node A0 stats:
+[INFO] stats: pkts_sent: 16
+[INFO] stats: pkts_failed: 14
+[INFO] node: 
 
-[INFO] producer: Node A1 stats:
+[INFO] node: Node A1 stats:
 [INFO] stats: pkts_sent: 15
 [INFO] stats: pkts_failed: 0
-[INFO] producer: 
+[INFO] node: 
 
-[INFO] producer: Node A2 stats:
+[INFO] node: Node A2 stats:
 [INFO] stats: pkts_sent: 8
 [INFO] stats: pkts_failed: 0
-[INFO] producer: 
+[INFO] node: 
 
-[INFO] switch: Node S stats:
-[INFO] stats: pkts_forwarded: 8
-[INFO] switch: 
+[INFO] node: Node S stats:
+[INFO] stats: pkts_forwarded: 24
+[INFO] node: 
 
-[INFO] consumer: Node B stats:
-[INFO] stats: pkts_recvd: 5
-[INFO] consumer: 
+[INFO] node: Node B stats:
+[INFO] stats: pkts_recvd: 20
+[INFO] node: 
 

@@ -24,6 +24,7 @@ class Producer(Node):
         self.get_stats().register_counter(f"pkts_failed")
         self.get_stats().register_cycle_map(f"{self.get_node_id()}")
         self.get_stats().register_interval_counter(f"pkts_sent_interval_{self.get_node_id()}", interval = 5)
+        self.get_stats().register_interval_counter(f"{self.get_node_id()}_cumulative_pkts", interval = 1)
 
     def advance(self, cycle):
         """
@@ -61,3 +62,4 @@ class Producer(Node):
             self.incr_counter_stats(f"pkts_sent", 1)
             self.record_cycle_stats(f"{self.get_node_id()}", cycle, True)
             self.incr_interval_counter_stats(f"pkts_sent_interval_{self.get_node_id()}", cycle, 1)
+            self.incr_interval_counter_stats(f"{self.get_node_id()}_cumulative_pkts", cycle, self.get_stats().get_counter("pkts_sent"))
