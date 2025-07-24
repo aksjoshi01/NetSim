@@ -55,8 +55,6 @@ class Simulator:
         assert link_id not in self.__links, f"Error: multiple links have same ID {link_id}"
         self.__links[link_id] = link
 
-    def get_user_nodes_dir(self):
-        return self.__parser.get_user_nodes_dir()
 
     def setup(self):
         self.__parser.parse()

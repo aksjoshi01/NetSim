@@ -20,11 +20,11 @@ class Producer(Node):
         super().__init__()
 
     def setup(self):
-        self.get_stats().register_counter(f"pkts_sent")
-        self.get_stats().register_counter(f"pkts_failed")
-        self.get_stats().register_cycle_map(f"{self.get_node_id()}")
-        self.get_stats().register_interval_counter(f"pkts_sent_interval_{self.get_node_id()}", interval = 5)
-        self.get_stats().register_interval_counter(f"{self.get_node_id()}_cumulative_pkts", interval = 1)
+        self.register_counter_stats(f"pkts_sent")
+        self.register_counter_stats(f"pkts_failed")
+        self.register_cycle_stats(f"{self.get_node_id()}")
+        self.register_interval_counter_stats(f"pkts_sent_interval_{self.get_node_id()}", interval = 5)
+        self.register_interval_counter_stats(f"{self.get_node_id()}_cumulative_pkts", interval = 1)
 
     def advance(self, cycle):
         """
@@ -51,8 +51,7 @@ class Producer(Node):
         output_port = self.get_node_id() + '_out'
 
         pkt_id = self.get_node_id() + "_" + str(cycle)
-        data = "__" + self.get_node_id() + "___" + str(cycle)
-        packet = Packet(pkt_id, data)
+        packet = Packet(pkt_id)
 
         if self.send_pkt(packet, output_port, cycle) < 0:
             logger.warning(f"{self.get_node_id()} unable to send packet {pkt_id}")

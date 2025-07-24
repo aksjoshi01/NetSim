@@ -26,20 +26,8 @@ class Node:
         self.__node_id = None
         self.__input_ports: Dict[str, 'InputPort'] = {}
         self.__output_ports: Dict[str, 'OutputPort'] = {}
-        self.__cycle = -1
+        self.__last_sent_cycle = -1
         self.__stats = Stats()
-
-    def get_stats(self):
-        return self.__stats
-
-    def incr_counter_stats(self, name, amount):
-        self.get_stats().incr_counter(name, amount)
-
-    def record_cycle_stats(self, name, cycle, val):
-        self.get_stats().record_cycle(name, cycle, val)
-
-    def incr_interval_counter_stats(self, name, cycle, amount):
-        self.get_stats().incr_interval_counter(name, cycle, amount)
 
     def set_node_id(self, node_id):
         """
@@ -56,20 +44,6 @@ class Node:
         @return     node_id - a string representing the ID of the node.
         """
         return self.__node_id
-
-    def get_cycle(self):
-        """
-        @brief      Returns the cycle value.
-        @return     cycle - represents the most recent time a pkt was sent.
-        """
-        return self.__cycle
-
-    def set_cycle(self, cycle):
-        """
-        @brief      Sets the cycle to the current simulation time.
-        @param      cycle - represents the most recent time a pkt was sent.
-        """
-        self.__cycle = cycle
 
     def add_input_port(self, input_port):
         """
@@ -109,14 +83,14 @@ class Node:
         """
         assert pkt is not None, "Error: packet cannot be None"
         assert isinstance(pkt, Packet), "Error; pkt should be of class type Packet"
-        assert self.get_cycle() < current_cycle, "Error: cannot send more than 1 pkt in a cycle"
+        assert self.__last_sent_cycle < current_cycle, "Error: cannot send more than 1 pkt in a cycle"
 
         output_port = self.get_output_port(port_id)
         assert output_port is not None, "Error: found None output port"
 
-        status = output_port.send_pkt(pkt, current_cycle)
+        status = output_port.push_pkt(pkt, current_cycle)
         if status == 0:
-            self.set_cycle(current_cycle)
+            self.__last_sent_cycle = current_cycle
         return status
 
     def recv_pkt(self, port_id: str, current_cycle: int):
@@ -130,11 +104,32 @@ class Node:
         if input_port is None:
             return None
         
-        pkt = input_port.recv_pkt(current_cycle)
+        pkt = input_port.pop_pkt(current_cycle)
         if pkt is not None:
             return pkt
         
         return None
+
+    def get_stats(self):
+        return self.__stats
+
+    def register_counter_stats(self, name):
+        self.get_stats().register_counter(name)
+
+    def register_cycle_stats(self, name):
+        self.get_stats().register_cycle(name)
+
+    def register_interval_counter_stats(self, name, interval):
+        self.get_stats().register_interval_counter(name, interval)
+
+    def incr_counter_stats(self, name, amount):
+        self.get_stats().incr_counter(name, amount)
+
+    def record_cycle_stats(self, name, cycle, val):
+        self.get_stats().record_cycle(name, cycle, val)
+
+    def incr_interval_counter_stats(self, name, cycle, amount):
+        self.get_stats().incr_interval_counter(name, cycle, amount)
 
     def teardown(self):
         logger.info(f"Node {self.get_node_id()} stats:")

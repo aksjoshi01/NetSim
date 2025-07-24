@@ -37,9 +37,9 @@ class Switch(Node):
         return self.__processing_latency
 
     def setup(self):
-        self.get_stats().register_counter(f"pkts_forwarded")
-        self.get_stats().register_cycle_map(f"{self.get_node_id()}")
-        self.get_stats().register_interval_counter(f"{self.get_node_id()}_cumulative_pkts", interval = 1)
+        self.register_counter_stats(f"pkts_forwarded")
+        self.register_cycle_stats(f"{self.get_node_id()}")
+        self.register_interval_counter_stats(f"{self.get_node_id()}_cumulative_pkts", interval = 1)
 
     def advance(self, cycle):
         """
