@@ -90,26 +90,20 @@ class Link:
 
         return -1
 
+    def __advance_pipeline(self, pipeline, current_cycle):
+        if len(pipeline) > 0:
+            pkt = pipeline[0]
+            if pkt[1] + self.get_latency() == current_cycle:
+                pipeline.popleft()
+                if isinstance(pkt[0], Packet):
+                    self.get_input_port().recv_from_link(pkt[0])
+                else:
+                    self.get_output_port().increment_credit()
 
     def advance(self, current_cycle):
         """
         @brief      Advances the packets in the pipeline.
         @param      current_cycle - integer value representing the simulation time.
         """
-        latency = self.get_latency()
-        pipeline = self.get_pipeline()
-        credit_pipeline = self.get_credit_pipeline()
-
-        # Advance the packets
-        if len(pipeline) > 0:
-            pkt = pipeline[0]
-            if pkt[1] + latency == current_cycle:
-                pipeline.popleft()
-                self.get_input_port().recv_from_link(pkt[0])
-
-        # Advance the credits
-        if len(credit_pipeline) > 0:
-            credit_pkt = credit_pipeline[0]
-            if credit_pkt[1] + latency == current_cycle:
-                credit_pipeline.popleft()
-                self.get_output_port().increment_credit()
+        self.__advance_pipeline(self.__pipeline, current_cycle)
+        self.__advance_pipeline(self.__credit_pipeline, current_cycle)

@@ -74,15 +74,6 @@ class Parser:
         self.nodes = []
         self.connections = []
 
-    def get_user_nodes_dir(self):
-        return self.__user_nodes_dir
-
-    def get_connection_specs(self):
-        return self.__connection_specs
-
-    def get_node_specs(self):
-        return self.__node_specs
-
     def __read_file(self, filepath):
         """
         @brief      Reads the input file and returns its data.
