@@ -29,11 +29,12 @@ class Consumer(Node):
         """
         self.record_cycle_stats(f"{self.get_node_id()}", cycle, False)
         input_port = 'B_in'
+        vc_id = "vc0"
 
         # if cycle % self.rate  != 0:
         #     return
 
-        pkt = self.recv_pkt(input_port, cycle)
+        pkt = self.recv_pkt(input_port, vc_id, cycle)
         if pkt:
             logger.debug(f"{self.get_node_id()} received packet {pkt.get_pkt_id()} on {input_port}")
             self.incr_counter_stats(f"pkts_recvd", 1)

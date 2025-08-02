@@ -16,7 +16,7 @@ class Link:
     """
     @class      Link
     """
-    def __init__(self, link_id, latency):
+    def __init__(self, link_id, latency, vc_ids):
         """
         @brief      A constructor for the Link class that initialises the attributes
                     to None.
@@ -29,8 +29,8 @@ class Link:
         self.__latency = latency
         self.__output_port = None
         self.__input_port = None
-        self.__pipeline = deque(maxlen = latency)
-        self.__credit_pipeline = deque(maxlen = latency)
+        self.__pipeline: deque = deque(maxlen=latency)
+        self.__credit_pipeline: deque = deque(maxlen=latency)
 
     def set_output_port(self, output_port: 'OutputPort'):
         """
@@ -58,14 +58,12 @@ class Link:
     def __is_space(self, pipeline):
         return len(pipeline) < pipeline.maxlen
     
-    def push_pkt(self, item, current_cycle, pipeline_type):
-        assert item is not None, "Error: item cannot be None"
-        assert pipeline_type in ('data', 'credit'), "Error: pipeline_type must be 'data' or 'credit'"
+    def push_pkt(self, pkt, current_cycle):
+        assert pkt is not None, "Error: pkt cannot be None"
 
-        pipeline = self.__pipeline if pipeline_type == "data" else self.__credit_pipeline
-
+        pipeline = self.__pipeline if isinstance(pkt, Packet) else self.__credit_pipeline
         if self.__is_space(pipeline):
-            pipeline.append([item, current_cycle])
+            pipeline.append([pkt, current_cycle])
             return 0
 
         return -1
@@ -76,8 +74,10 @@ class Link:
             if pkt[1] + self.__latency == current_cycle:
                 pipeline.popleft()
                 if isinstance(pkt[0], Packet):
+                    logger.debug("Link has delivered data packet")
                     self.__input_port.push_pkt(pkt[0])
                 else:
+                    logger.debug("Link has delivered credit packet")
                     self.__output_port.push_pkt(pkt[0], current_cycle)
 
     def advance(self, current_cycle):

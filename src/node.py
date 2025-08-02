@@ -73,7 +73,7 @@ class Node:
         assert port_id in self.__output_ports, "Error: invalid port_id given"
         return self.__output_ports[port_id]
 
-    def send_pkt(self, pkt: 'Packet', port_id: str, current_cycle: int):
+    def send_pkt(self, pkt, port_id, current_cycle):
         """
         @brief      Sends a packet to the output port of the node.
         @param      pkt - Packet to be sent.
@@ -93,7 +93,7 @@ class Node:
             self.__last_sent_cycle = current_cycle
         return status
 
-    def recv_pkt(self, port_id: str, current_cycle: int):
+    def recv_pkt(self, port_id, vc_id, current_cycle):
         """
         @brief      Receives a packet to the input port of the node.
         @param      port_id - ID of the input port to receive the packet from.
@@ -104,7 +104,7 @@ class Node:
         if input_port is None:
             return None
         
-        pkt = input_port.pop_pkt(current_cycle)
+        pkt = input_port.pop_pkt(vc_id, current_cycle)
         if pkt is not None:
             return pkt
         

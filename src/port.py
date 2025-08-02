@@ -46,7 +46,7 @@ class InputPort(Port):
     """
     @class      InputPort
     """
-    def __init__(self, port_id, max_size, link):
+    def __init__(self, port_id, max_size, link, vc_ids):
         """
         @brief      A constructor for the InputPort class.
         """
@@ -54,21 +54,22 @@ class InputPort(Port):
         assert max_size > 0, "Error: max_size should be greater than zero"
         super().__init__(port_id, link)
         self.__max_size = max_size
-        self.__fifo: deque[Packet] = deque()
+        self.__fifo = {vc_id: deque() for vc_id in vc_ids}
 
-    def pop_pkt(self, current_cycle):
+    def pop_pkt(self, vc_id, current_cycle):
         """
         @brief      Receive the packet from its fifo, if present.
         @param      current_cycle - the current simulation time.
         @return     the received pkt on success, None otherwise.
         """
-        if len(self.__fifo) > 0:
+        fifo = self.__fifo.get(vc_id)
+        if len(fifo) > 0:
             connected_link = self.get_connected_link()
-            credit_pkt = CreditPacket()
-            status = connected_link.push_pkt(credit_pkt, current_cycle, "credit")
+            credit_pkt = CreditPacket(vc_id)
+            status = connected_link.push_pkt(credit_pkt, current_cycle)
             if status < 0:
                 return None
-            return self.__fifo.popleft()
+            return fifo.popleft()
         
         return None
 
@@ -77,40 +78,45 @@ class InputPort(Port):
         @brief      Pushes the packet to its fifo.
         @param      pkt - the packet to be pushed.
         """
-        if len(self.__fifo) < self.__max_size:
-            self.__fifo.append(pkt)
+        if len(self.__fifo[pkt.get_vc_id()]) < self.__max_size:
+            self.__fifo[pkt.get_vc_id()].append(pkt)
 
 
 class OutputPort(Port):
     """
     @class      OutputPort
     """
-    def __init__(self, port_id, credit, link):
+    def __init__(self, port_id, credit, link, vc_ids):
         """
         @brief      A constructor for the OutputPort class.
         """
         assert isinstance(credit, int), "Error: credit should be an integer"
         assert credit > 0, "Error: initial credit should be greater than zero"
         super().__init__(port_id, link)
-        self.__credit = credit
         self.__recent_sent_cycle = -1
+        self.__credit = {vc_id: credit for vc_id in vc_ids}
 
-    def get_credit(self):
-        return self.__credit
+    def get_credit(self, vc_id):
+        assert vc_id in self.__credit, "Error: vc_id not found in credit"
+        return self.__credit.get(vc_id)
 
-    def __increment_credit(self):
+    def __increment_credit(self, vc_id):
         """
         @brief      Increments the credit by one.
         """
-        self.__credit += 1
-        logger.debug(f"Port '{self.get_port_id()}' received credit")
+        credit = self.get_credit(vc_id)
+        credit += 1
+        self.__credit[vc_id] = credit
 
-    def __decrement_credit(self):
+    def __decrement_credit(self, vc_id):
         """
         @brief      Decrements the credit by one.
         """
-        self.__credit -= 1
-
+        credit = self.get_credit(vc_id)
+        credit -= 1
+        logger.debug(f"Port '{self.get_port_id()}' sent packet, remaining credit: {credit}")
+        self.__credit[vc_id] = credit
+        
     def push_pkt(self, pkt, current_cycle):
         """
         @brief      Forwards the pkt to the connected link.
@@ -121,15 +127,19 @@ class OutputPort(Port):
         assert pkt is not None, "Error: packet cannot be None"
         assert self.__recent_sent_cycle < current_cycle, "Error: cannot send more than 1 pkt in a cycle"
 
+        # Link calls this method to push credit packet
         if isinstance(pkt, CreditPacket):
-            self.__increment_credit()
+            logger.debug(f"Port '{self.get_port_id()}' received credit for vc_id {pkt.get_vc_id()}")
+            self.__increment_credit(pkt.get_vc_id())
             return 0
-
-        if self.get_credit() > 0:
+        
+        # Node calls this method to push data packet
+        available_credits = self.get_credit(pkt.get_vc_id())
+        if available_credits > 0:
             connected_link = self.get_connected_link()
-            status = connected_link.push_pkt(pkt, current_cycle, "data")
+            status = connected_link.push_pkt(pkt, current_cycle)
             if status == 0:
-                self.__decrement_credit()
+                self.__decrement_credit(pkt.get_vc_id())
                 self.__recent_sent_cycle = current_cycle
             return status
 

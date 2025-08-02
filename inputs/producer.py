@@ -34,28 +34,31 @@ class Producer(Node):
         self.record_cycle_stats(f"{self.get_node_id()}", cycle, False)
 
         # if self.get_node_id() == "A1" or self.get_node_id() == "A2":
-            # return
+        #     return
+        pkt_id = self.get_node_id() + "_" + str(cycle)
+        vc_id = "vc0"
 
         if self.get_node_id() == "A0":
-            stream_rate = 1
-        elif self.get_node_id() == "A1":
-            stream_rate = 2
-        elif self.get_node_id() == "A2":
-            stream_rate = 4
-        else:
-            return
+            # stream_rate = 1
+            vc_id = "vc1"
+        # elif self.get_node_id() == "A1":
+            # stream_rate = 2
+        # elif self.get_node_id() == "A2":
+            # stream_rate = 4
+        # else:
+            # return
 
-        if cycle % stream_rate != 0:
-            return
+        # if cycle % stream_rate != 0:
+            # return
 
         output_port = self.get_node_id() + '_out'
 
-        pkt_id = self.get_node_id() + "_" + str(cycle)
-        packet = Packet(pkt_id)
+        packet = Packet(pkt_id, vc_id)
 
         if self.send_pkt(packet, output_port, cycle) < 0:
             logger.warning(f"{self.get_node_id()} unable to send packet {pkt_id}")
             self.incr_counter_stats(f"pkts_failed", 1)
+            self.incr_interval_counter_stats(f"{self.get_node_id()}_cumulative_pkts", cycle, self.get_stats().get_counter("pkts_sent"))
         else:
             logger.debug(f"{self.get_node_id()} sent packet {pkt_id}")
             self.incr_counter_stats(f"pkts_sent", 1)
