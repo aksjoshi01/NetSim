@@ -1,1 +1,3 @@
-NetSim is a cycle-accurate network simulator
+## NetSim
+
+**NetSim** is a cycle-accurate network simulator designed to model large, multi-stage switching networks using credit-based flow control. It parses modular `.csv` configuration files to construct arbitrary network topologies and simulate packet-level traffic flow with precise timing. NetSim also provides extensible interfaces for collecting and visualizing custom, user-defined statistics at the node level, enabling detailed analysis of congestion patterns and performance bottlenecks across the network.
