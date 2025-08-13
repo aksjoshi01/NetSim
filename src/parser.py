@@ -9,11 +9,16 @@ import csv
 import sys
 
 class NodeSetup:
-    def __init__(self, module_name, class_name, node_id):
+    def __init__(self, module_name, class_name, node_id, pattern=None, pattern_params=None):
         self.module_name = module_name
         self.class_name = class_name
         self.node_id = node_id
+        self.pattern = pattern
+        self.pattern_params = pattern_params
     
+    # -------------------------------
+    # Getters for the node attributes
+    # -------------------------------
     def get_module_name(self):
         return self.module_name
 
@@ -22,6 +27,12 @@ class NodeSetup:
 
     def get_node_id(self):
         return self.node_id
+
+    def get_pattern(self):
+        return self.pattern
+
+    def get_pattern_params(self):
+        return self.pattern_params
 
 class ConnectionSetup:
     def __init__(self, src_node, op_id, dst_node, ip_id, credit, fifo_size, latency):
@@ -34,6 +45,9 @@ class ConnectionSetup:
         self.latency = latency
         self.link_id = f"link_{src_node}_{op_id}_to_{dst_node}_{ip_id}"
 
+    # -------------------------------------
+    # Getters for the connection attributes
+    # -------------------------------------
     def get_src_node(self):
         return self.src_node
 
@@ -92,8 +106,10 @@ class Parser:
             module_name = row["module"]
             class_name = row["class"]
             node_id = row["node_id"]
+            pattern = row.get("pattern", None)
+            pattern_params = row.get("pattern_params", None)
 
-            node = NodeSetup(module_name, class_name, node_id)
+            node = NodeSetup(module_name, class_name, node_id, pattern, pattern_params)
             self.nodes.append(node)
 
     def __parse_connections(self):

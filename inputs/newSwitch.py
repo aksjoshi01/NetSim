@@ -7,7 +7,7 @@ from packet import Packet
 from port import InputPort, OutputPort
 
 class NewSwitch(Node):
-    def __init__(self, algorithm = "fifo"):
+    def __init__(self, algorithm="fifo"):
         super().__init__()
         self.processing_latency = 2
         self.routing_table = {}
@@ -48,10 +48,15 @@ class NewSwitch(Node):
             input_port = self.get_input_port(in_id)
             if not input_port:
                 continue
+            # peek at the packet in the input port
             pkt = input_port.peek()
             if pkt:
+                # check the dest node id and add to the tail of the appropriate scheduling queue
                 out_id = self.routing_table[pkt.get_dst_node_id()]
                 ready_cycle = cycle + self.processing_latency
+                # if the scheduling queue is empty or the last packet in the queue will be sent at the same cycle,
+                # append the new packet to the queue
+                # this means that at any point in time, the scheduling queue will have packets that are ready to be sent at the same cycle
                 if not self.sched_queues[out_id] or self.sched_queues[out_id][-1][0] == ready_cycle:
                     self.sched_queues[out_id].append((ready_cycle, pkt, in_id))
                     logger.debug(f"Switch received packet {pkt.get_pkt_id()} from {in_id} and queued for {out_id}")
@@ -60,21 +65,23 @@ class NewSwitch(Node):
     # Scheduling algorithms
     # ---------------------
     def fifo_algorithm(self, out_id, cycle):
-        """Serve packets in FIFO order."""
+        # check if there are packets to process and if the output port has credits
         if not self.sched_queues[out_id]:
             return
         if self.get_output_port(out_id).get_credit() <= 0:
             return
 
+        # check if the first packet in the queue is ready to be sent
         ready_cycle, pkt, in_id = self.sched_queues[out_id][0]
         if ready_cycle > cycle:
             return
 
-        # dequeue and send
+        # dequeue the packet and send it
         self.sched_queues[out_id].popleft()
         self.recv_pkt(in_id, cycle)
         self.send_pkt(pkt, out_id, cycle)
 
+        # record the stats
         logger.debug(f"Switch forwarded packet {pkt.get_pkt_id()} from {in_id} to {out_id}")
         self.incr_counter_stats("pkts_forwarded", 1)
         self.record_cycle_stats(f"{self.get_node_id()}", cycle, True)
