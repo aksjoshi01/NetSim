@@ -1,5 +1,6 @@
-src_node,src_port,dst_node,dst_port,credit,fifo_size,latency,vc_ids
-A0,A0_out,S,S0_in,8,8,4,"vc0,vc1"
-A1,A1_out,S,S1_in,8,8,4,"vc0"
-A2,A2_out,S,S2_in,8,8,4,"vc0"
-S,S_out,B,B_in,8,8,4,"vc0"
+src_node,src_port,dst_node,dst_port,credit,fifo_size,latency
+A0,A0_out,S,S0_in,4,4,2
+A1,A1_out,S,S1_in,4,4,2
+A2,A2_out,S,S2_in,4,4,2
+S,S0_out,B0,B0_in,4,4,2
+S,S1_out,B1,B1_in,4,4,2

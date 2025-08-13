@@ -1,6 +1,7 @@
 module,class,node_id
-producer,Producer,A0
-producer,Producer,A1
-producer,Producer,A2
-switch,Switch,S
-consumer,Consumer,B
+newProducer,NewProducer,A0
+newProducer,NewProducer,A1
+newProducer,NewProducer,A2
+newSwitch,NewSwitch,S
+newConsumer,NewConsumer,B0
+newConsumer,NewConsumer,B1

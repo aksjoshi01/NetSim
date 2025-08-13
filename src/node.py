@@ -83,7 +83,6 @@ class Node:
         """
         assert pkt is not None, "Error: packet cannot be None"
         assert isinstance(pkt, Packet), "Error; pkt should be of class type Packet"
-        assert self.__last_sent_cycle < current_cycle, "Error: cannot send more than 1 pkt in a cycle"
 
         output_port = self.get_output_port(port_id)
         assert output_port is not None, "Error: found None output port"
@@ -93,7 +92,7 @@ class Node:
             self.__last_sent_cycle = current_cycle
         return status
 
-    def recv_pkt(self, port_id, vc_id, current_cycle):
+    def recv_pkt(self, port_id, current_cycle):
         """
         @brief      Receives a packet to the input port of the node.
         @param      port_id - ID of the input port to receive the packet from.
@@ -104,7 +103,7 @@ class Node:
         if input_port is None:
             return None
         
-        pkt = input_port.pop_pkt(vc_id, current_cycle)
+        pkt = input_port.pop_pkt(current_cycle)
         if pkt is not None:
             return pkt
         

@@ -113,10 +113,10 @@ class Simulator:
             src_node = self.get_node(data.get_src_node())
             dst_node = self.get_node(data.get_dst_node())
 
-            link = Link(data.get_link_id(), data.get_latency(), data.get_vc_ids())
+            link = Link(data.get_link_id(), data.get_latency())
 
-            output_port = OutputPort(data.get_op_id(), data.get_credit(), link, data.get_vc_ids())
-            input_port = InputPort(data.get_ip_id(), data.get_fifo_size(), link, data.get_vc_ids())
+            output_port = OutputPort(data.get_op_id(), data.get_credit(), link)
+            input_port = InputPort(data.get_ip_id(), data.get_fifo_size(), link)
 
             link.set_output_port(output_port)
             link.set_input_port(input_port)

@@ -50,18 +50,17 @@ class Switch(Node):
         self.record_cycle_stats(f"{self.get_node_id()}", cycle, False)
         input_ports = ['S0_in', 'S1_in', 'S2_in']
         output_port = 'S_out'
-        vc_id = "vc0"
 
         num_inputs = len(input_ports)
 
         # Round-robin over input ports
         for i in range(num_inputs):
-            if self.get_output_port(output_port).get_credit(vc_id) == 0:
+            if self.get_output_port(output_port).get_credit() == 0:
                 break
 
             port_idx = (self.get_rr_index() + i) % num_inputs
             input_port = self.get_input_port(input_ports[port_idx])
-            pkt = self.recv_pkt(input_port.get_port_id(), vc_id, cycle)
+            pkt = self.recv_pkt(input_port.get_port_id(), cycle)
             if pkt:
                 logger.debug(f"Switch received packet {pkt.get_pkt_id()} from {input_port.get_port_id()}")
                 ready_cycle = cycle + self.get_processing_latency()

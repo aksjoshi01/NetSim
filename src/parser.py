@@ -24,7 +24,7 @@ class NodeSetup:
         return self.node_id
 
 class ConnectionSetup:
-    def __init__(self, src_node, op_id, dst_node, ip_id, credit, fifo_size, latency, vc_ids):
+    def __init__(self, src_node, op_id, dst_node, ip_id, credit, fifo_size, latency):
         self.src_node = src_node
         self.op_id = op_id
         self.dst_node = dst_node
@@ -33,7 +33,6 @@ class ConnectionSetup:
         self.fifo_size = fifo_size
         self.latency = latency
         self.link_id = f"link_{src_node}_{op_id}_to_{dst_node}_{ip_id}"
-        self.vc_ids = vc_ids
 
     def get_src_node(self):
         return self.src_node
@@ -59,8 +58,6 @@ class ConnectionSetup:
     def get_link_id(self):
         return self.link_id
 
-    def get_vc_ids(self):
-        return self.vc_ids
 
 class Parser:
     """
@@ -114,10 +111,7 @@ class Parser:
             except ValueError:
                 raise ValueError(f"Invalid integer")
             
-            vc_ids_raw = row.get("vc_ids", "")
-            vc_ids = [v.strip() for v in vc_ids_raw.split(",") if v.strip()]
-            
-            connection = ConnectionSetup(src_node, op_id, dst_node, ip_id, credit, fifo_size, latency, vc_ids)
+            connection = ConnectionSetup(src_node, op_id, dst_node, ip_id, credit, fifo_size, latency)
             self.connections.append(connection)
 
     def parse(self):

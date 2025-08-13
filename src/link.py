@@ -16,7 +16,7 @@ class Link:
     """
     @class      Link
     """
-    def __init__(self, link_id, latency, vc_ids):
+    def __init__(self, link_id, latency):
         """
         @brief      A constructor for the Link class that initialises the attributes
                     to None.
