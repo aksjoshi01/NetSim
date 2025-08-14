@@ -1,7 +1,10 @@
 module,class,node_id,pattern,pattern_params
-newProducer,NewProducer,A0,alternate,B0:B1
-newProducer,NewProducer,A1,alternate,B1:B0
-newProducer,NewProducer,A2,alternate,B0:B1
+newProducer,NewProducer,A0,alternate,B3
+newProducer,NewProducer,A1,alternate,B2
+newProducer,NewProducer,A2,alternate,B0
+newProducer,NewProducer,A3,alternate,B1
 newSwitch,NewSwitch,S,,
 newConsumer,NewConsumer,B0,,
 newConsumer,NewConsumer,B1,,
+newConsumer,NewConsumer,B2,,
+newConsumer,NewConsumer,B3,,

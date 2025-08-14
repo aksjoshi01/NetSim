@@ -1,6 +1,9 @@
 src_node,src_port,dst_node,dst_port,credit,fifo_size,latency
-A0,A0_out,S,S0_in,4,4,2
-A1,A1_out,S,S1_in,4,4,2
-A2,A2_out,S,S2_in,4,4,2
-S,S0_out,B0,B0_in,4,4,2
-S,S1_out,B1,B1_in,4,4,2
+A0,A0_out,S,S0_in,5,5,2
+A1,A1_out,S,S1_in,5,5,2
+A2,A2_out,S,S2_in,5,5,2
+A3,A3_out,S,S3_in,5,5,2
+S,S0_out,B0,B0_in,5,5,2
+S,S1_out,B1,B1_in,5,5,2
+S,S2_out,B2,B2_in,5,5,2
+S,S3_out,B3,B3_in,5,5,2

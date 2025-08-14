@@ -65,6 +65,20 @@ class Node:
         assert output_port.get_port_id() not in self.__output_ports, "Error: cannot add output port with duplicate ID"
         self.__output_ports[output_port.get_port_id()] = output_port
 
+    def get_input_port_ids(self):
+        """
+        @brief      Returns the IDs of all input ports.
+        @return     A list of input port IDs.
+        """
+        return list(self.__input_ports.keys())
+
+    def get_output_port_ids(self):
+        """
+        @brief      Returns the IDs of all output ports.
+        @return     A list of output port IDs.
+        """
+        return list(self.__output_ports.keys())
+
     def get_input_port(self, port_id):
         assert port_id in self.__input_ports, "Error: invalid port_id given"
         return self.__input_ports[port_id]

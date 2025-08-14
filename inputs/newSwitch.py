@@ -9,7 +9,7 @@ from port import InputPort, OutputPort
 class NewSwitch(Node):
     def __init__(self, algorithm="fifo"):
         super().__init__()
-        self.processing_latency = 2
+        self.processing_latency = 1
         self.routing_table = {}
         self.sched_queues = {}
 
@@ -26,9 +26,11 @@ class NewSwitch(Node):
         # construct the routing table
         self.routing_table["B0"] = "S0_out"
         self.routing_table["B1"] = "S1_out"
+        self.routing_table["B2"] = "S2_out"
+        self.routing_table["B3"] = "S3_out"
         
         # initialize the scheduling queues for all output ports
-        for out_id in ['S0_out', 'S1_out']:
+        for out_id in self.get_output_port_ids():
             self.sched_queues[out_id] = deque()
 
         # register stats
@@ -44,7 +46,7 @@ class NewSwitch(Node):
             self.algo_fn(out_id, cycle)
 
         # step 2: add current inputs to scheduling queues
-        for in_id in ['S0_in', 'S1_in', 'S2_in']:
+        for in_id in self.get_input_port_ids():
             input_port = self.get_input_port(in_id)
             if not input_port:
                 continue
