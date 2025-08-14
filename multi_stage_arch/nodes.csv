@@ -1,0 +1,15 @@
+module,class,node_id,pattern,pattern_params
+producer,Producer,A0,alternate,B0
+producer,Producer,A1,alternate,B1
+producer,Producer,A2,alternate,B2
+producer,Producer,A3,alternate,B3
+switch,Switch,S1,,
+switch,Switch,S2,,
+switch,Switch,S3,,
+switch,Switch,S4,,
+switch,Switch,S5,,
+switch,Switch,S6,,
+consumer,Consumer,B0,,
+consumer,Consumer,B1,,
+consumer,Consumer,B2,,
+consumer,Consumer,B3,,

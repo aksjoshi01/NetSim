@@ -1,0 +1,17 @@
+src_node,src_port,dst_node,dst_port,credit,fifo_size,latency
+A0,A0_out,S1,S1_0_in,5,5,2
+A1,A1_out,S1,S1_1_in,5,5,2
+A2,A2_out,S2,S2_0_in,5,5,2
+A3,A3_out,S2,S2_1_in,5,5,2
+S1,S1_0_out,S3,S3_0_in,5,5,2
+S1,S1_1_out,S4,S4_0_in,5,5,2
+S2,S2_0_out,S3,S3_1_in,5,5,2
+S2,S2_1_out,S4,S4_1_in,5,5,2
+S3,S3_0_out,S5,S5_0_in,5,5,2
+S3,S3_1_out,S6,S6_0_in,5,5,2
+S4,S4_0_out,S5,S5_1_in,5,5,2
+S4,S4_1_out,S6,S6_1_in,5,5,2
+S5,S5_0_out,B0,B0_in,5,5,2
+S5,S5_1_out,B1,B1_in,5,5,2
+S6,S6_0_out,B2,B2_in,5,5,2
+S6,S6_1_out,B3,B3_in,5,5,2
